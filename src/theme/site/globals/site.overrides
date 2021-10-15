@@ -1,3 +1,11 @@
 /*******************************
         Global Overrides
 *******************************/
+
+.stagingBanner {
+  display: none;
+}
+
+div#view .ui.container > * {
+  margin-bottom: 1rem;
+}

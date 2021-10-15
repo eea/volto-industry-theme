@@ -2,3 +2,67 @@
          Theme Overrides
 *******************************/
 
+.ui.basic.segment.header-wrapper {
+  .header {
+    flex-flow: row;
+    align-items: center;
+
+    .navigation {
+      margin-left: 1rem;
+
+      .ui.menu {
+        flex-wrap: wrap;
+        margin-top: 0;
+        height: 100%;
+
+        .item {
+          text-decoration: none;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.8);
+
+          &.active {
+            color: rgba(255, 255, 255, 1);
+            font-weight: bold;
+            background: transparent;
+          }
+
+          &:hover {
+            color: rgba(255, 255, 255, 1);
+          }
+        }
+      }
+
+      .hamburger-inner,
+      .hamburger-inner::before,
+      .hamburger-inner::after {
+        background-color: #ffffff;
+      }
+    }
+
+    .header-partner-section {
+      > * {
+       display: inline-block; 
+      }
+    }
+
+    @media only screen and (max-width: @largestTabletScreen) {
+      flex-flow: column;
+      align-items: initial;
+
+      .header-partner-section {
+        margin-top: 1rem;
+        margin-left: 1rem;
+      }
+
+      .navigation {
+        .ui.stackable.menu {
+          flex-direction: column;
+
+          .item {
+            width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -196,7 +196,7 @@
         Grid
 --------------------*/
 
-@columnCount: 16;
+@columnCount: 12;
 
 /*-------------------
      Transitions
@@ -221,12 +221,12 @@
 
 /*---  Colors  ---*/
 @red              : #DB2828;
-@orange           : #F2711C;
+@orange           : #E2776B;
 @yellow           : #FBBD08;
 @olive            : #B5CC18;
 @green            : #21BA45;
 @teal             : #00B5AD;
-@blue             : #2185D0;
+@blue             : #5397B2;
 @violet           : #6435C9;
 @purple           : #A333C8;
 @pink             : #E03997;
@@ -248,6 +248,9 @@
 @lightBrown       : #D67C1C;
 @lightGrey        : #DCDDDE;
 @lightBlack       : #545454;
+
+/*---   Dark colors  ---*/
+@darkBlue         : #11415D;
 
 /*---   Neutrals  ---*/
 @fullBlack        : #000000;
