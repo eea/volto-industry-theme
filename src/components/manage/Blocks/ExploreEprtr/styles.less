@@ -1,0 +1,82 @@
+@import (multiple, reference, optional) '../../theme.config';
+
+@type: extra;
+@element: custom;
+
+.ui.grid.explore-eprtr {
+  align-items: center;
+  margin-bottom: 0.5rem !important;
+
+  .column.explore-map {
+    a {
+      img {
+        width: 100%;
+      }
+
+      &:hover {
+        img {
+          opacity: 0.9;
+        }
+      }
+    }
+
+    > * {
+      display: block;
+    }
+  }
+
+  .column.description {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-self: stretch;
+    font-size: @fontSize;
+
+    .explore-tile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+
+      img {
+        margin-right: 1rem;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+
+      p {
+        color: @lightBlue;
+        margin-bottom: 0;
+        font-weight: bold;
+
+        &.title {
+          color: @darkBlue;
+          font-size: 1.2em;
+          margin-bottom: 0.2rem;
+        }
+      }
+    }
+
+    > a:hover {
+      .explore-tile {
+        p {
+          opacity: 0.9;
+          // color: @darkBlue;
+        }
+      }
+    }
+
+    > * {
+      display: block;
+    }
+  }
+}
+
+.explore-eprtr .description > a:hover .explore-tile img {
+  opacity: 0.9;
+}
+
+.explore-eprtr .description > a:hover .explore-tile p {
+  color: #00435c;
+}

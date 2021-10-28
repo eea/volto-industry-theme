@@ -1,11 +1,3 @@
 /*******************************
          Theme Overrides
 *******************************/
-.ui.segment {
-  &.inverted {
-    &.primary {
-      background: @primaryColor;
-      border-bottom: 0;
-    }
-  }
-}

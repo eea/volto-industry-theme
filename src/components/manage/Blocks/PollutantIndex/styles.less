@@ -1,0 +1,106 @@
+@import (multiple, reference, optional) '../../theme.config';
+
+@type: extra;
+@element: custom;
+
+@borderSize: 3px;
+
+.index-pollutants {
+  border: 1px solid #d4d4d5;
+  border-radius: 0.25rem;
+  background-color: #f6f6f6;
+  padding-top: 1rem;
+
+  .ui.selection.dropdown {
+    color: @primaryColor;
+    background: transparent;
+    width: fit-content;
+    margin-bottom: 1rem;
+    width: fit-content;
+    border: none;
+    font-size: 1em;
+    font-weight: bold;
+
+    > .text {
+      color: @primaryColor !important;
+      font-weight: bold !important;
+    }
+
+    > .text,
+    > .icon {
+      font-size: 1.5em;
+    }
+
+    &.active {
+      border-bottom: none;
+      box-shadow: none;
+    }
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+
+  .ui.menu {
+    @textColor: var(--text-color, @blue);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+
+    .item {
+      margin-bottom: 0 !important;
+      border: none !important;
+      padding: @relative11px @relative14px;
+      color: @textColor;
+      font-weight: bold;
+
+      &:hover {
+        .darkenFilter(0.9);
+        color: @textColor;
+        background: transparent !important;
+      }
+
+      &::before {
+        display: none;
+      }
+
+      &.active {
+        background: transparent;
+        color: @textColor;
+        font-weight: bold;
+
+        &:hover {
+          color: @textColor;
+        }
+
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: calc(100% - @borderSize + 1px);
+          left: 0.875em;
+          height: @borderSize;
+          width: calc(100% - 1.75em);
+          background-color: @textColor;
+        }
+
+        &:hover {
+          .darkenFilter(0.9);
+        }
+      }
+    }
+
+    > .item:first-child {
+      border-radius: @defaultBorderRadius 0px 0px 0px;
+    }
+  }
+
+  .ui.tab {
+    background-color: transparent !important;
+    border: none !important;
+  }
+
+  h3 {
+    color: @orange;
+  }
+}

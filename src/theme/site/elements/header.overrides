@@ -10,6 +10,10 @@
     .navigation {
       margin-left: 1rem;
 
+      .hamburger {
+        display: flex;
+      }
+
       .ui.menu {
         flex-wrap: wrap;
         margin-top: 0;

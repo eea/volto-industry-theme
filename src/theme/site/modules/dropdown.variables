@@ -160,7 +160,7 @@
 @selectionIconZIndex: 3;
 @selectionIconHitbox: @selectionVerticalPadding;
 @selectionIconMargin: -@selectionIconHitbox;
-@selectionIconPadding: @selectionIconHitbox / @dropdownIconSize;
+@selectionIconPadding: 0;
 @selectionIconTransition: opacity @defaultDuration @defaultEasing;
 
 @selectionMenuBorderRadius: 0em 0em @borderRadius @borderRadius;

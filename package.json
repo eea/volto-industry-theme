@@ -16,9 +16,20 @@
     "type": "git",
     "url": "git@github.com:eea/volto-industry-theme.git"
   },
+  "addons": [
+    "@eeacms/volto-datablocks",
+    "@eeacms/volto-openlayers-map",
+    "@eeacms/volto-columns-block"
+  ],
   "dependencies": {
     "@cypress/code-coverage": "^3.9.5",
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "@eeacms/volto-datablocks": "2.0.13",
+    "@eeacms/volto-openlayers-map": "0.1.2",
+    "@eeacms/volto-columns-block": "4.4.6",
+    "axios": "0.24.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "react-highlight-words": "0.17.0",
+    "react-tooltip": "4.2.21"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",

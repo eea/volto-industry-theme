@@ -1,0 +1,222 @@
+@import (multiple, reference, optional) '../../theme.config';
+
+@type: extra;
+@element: custom;
+
+.industry-map {
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+
+  .privacy-protection {
+    .wrapper {
+      opacity: 1;
+    }
+  }
+
+  .ol-map {
+    height: 600px;
+    min-height: 600px;
+
+    .ol-viewport {
+      overflow: visible !important;
+    }
+  }
+
+  .ol-control {
+    &.ol-custom {
+      left: unset !important;
+      right: 0.5rem !important;
+
+      .menu-button {
+        display: none;
+
+        @media only screen and (max-width: @largestTabletScreen) {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .popover-header {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 0;
+    background-color: #f7f7f7;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+    font-size: 1rem;
+  }
+
+  .popover-actions {
+    padding: 1rem 2rem;
+    border-top: 1px solid #ebebeb;
+    background-color: #f7f7f7;
+    border-bottom-left-radius: calc(0.3rem - 1px);
+    border-bottom-right-radius: calc(0.3rem - 1px);
+    text-align: center;
+  }
+
+  .popover-body {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .popover-body code {
+    color: #e83e8c;
+    font-size: 87.5%;
+    word-wrap: break-word;
+  }
+
+  .ol-popup {
+    #popup {
+      position: absolute;
+      bottom: 10px;
+      min-width: 280px;
+      max-width: 280px;
+      transform: translateX(-50%);
+      background-color: white;
+      border: 1px solid #cccccc;
+      border-radius: 0.2em;
+      box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+
+      &::after,
+      &::before {
+        position: absolute;
+        top: 100%;
+        width: 0;
+        height: 0;
+        border: solid transparent;
+        content: ' ';
+        pointer-events: none;
+      }
+
+      &::after {
+        left: 50%;
+        border-width: 10px;
+        border-top-color: white;
+        transform: translateX(-50%);
+      }
+
+      &::before {
+        left: 50%;
+        border-width: 11px;
+        border-top-color: #cccccc;
+        margin-left: -11px;
+      }
+    }
+  }
+
+  .ol-dynamic-filter {
+    display: block !important;
+    height: 100%;
+    min-width: 320px;
+    max-width: 320px;
+    left: 100px;
+    transition: opacity 0.3s ease-in-out;
+    overflow: auto;
+
+    > div {
+      height: 100%;
+    }
+
+    #map-sidebar {
+      background-color: #fff;
+      color: @primaryColor;
+      height: fit-content;
+      min-height: 100%;
+      padding: 2rem 1rem;
+      box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+
+      h2 .delete.icon {
+        display: none;
+      }
+
+      .ui.dropdown {
+        > .dropdown.icon:before {
+          color: @orange;
+        }
+
+        .text {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .clear-button {
+        --text-color: @orange;
+        margin-top: 1.5rem;
+        width: 100%;
+      }
+
+      @media only screen and (max-width: @largestTabletScreen) {
+        h2 .delete.icon {
+          display: initial;
+        }
+      }
+    }
+
+    @media only screen and (max-width: @largestTabletScreen) {
+      display: none !important;
+    }
+  }
+
+  .loader {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    padding: 4px 6px;
+    position: absolute;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 1;
+    bottom: 1rem;
+    right: 1rem;
+    color: @primaryColor;
+  }
+
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding: 0 1rem;
+  }
+}
+
+.ui.modal#popup-detailed {
+  > .header,
+  h3 {
+    color: @primaryColor;
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
+  }
+
+  > .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .icon {
+      cursor: pointer;
+      color: @orange !important;
+
+      &:hover {
+        .darkenFilter(0.9);
+      }
+    }
+  }
+
+  > .actions {
+    text-align: center;
+    padding: 1rem !important;
+  }
+
+  p:not(:last-child) {
+    margin-bottom: 0.5em;
+  }
+}
+
+body.map-sidebar-visible .industry-map .ol-dynamic-filter {
+  @media only screen and (max-width: @largestTabletScreen) {
+    display: block !important;
+    width: 100%;
+    left: 0;
+    z-index: 1;
+  }
+}

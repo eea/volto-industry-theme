@@ -23,7 +23,7 @@ const Footer = () => (
     id="footer"
     className="footer-wrapper"
     role="contentinfo"
-    color="primary"
+    color="blue"
     padded="very"
   >
     <Container>

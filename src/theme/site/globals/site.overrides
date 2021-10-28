@@ -1,11 +1,64 @@
 /*******************************
         Global Overrides
 *******************************/
+@import "./pluggableStyles.less";
+
+.addScrollbars() when (@useCustomScrollbars) {
+  /* Force Simple Scrollbars */
+  body::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: @customScrollbarWidth;
+    height: @customScrollbarHeight;
+  }
+  body::-webkit-scrollbar-track {
+    background: @trackBackground;
+    border-radius: @trackBorderRadius;
+  }
+  body::-webkit-scrollbar-thumb {
+    cursor: pointer;
+    border-radius: @thumbBorderRadius;
+    background: @thumbBackground;
+    transition: @thumbTransition;
+  }
+  body::-webkit-scrollbar-thumb:window-inactive {
+    background: @thumbInactiveBackground;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background: @thumbHoverBackground;
+  }
+}
+
+.addScrollbars();
+
+.no-space-top .ui.content-area {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.no-space-bottom .ui.content-area {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.stretch {
+  padding: 0 !important;
+}
 
 .stagingBanner {
-  display: none;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08) !important;
+
+  .ui.message {
+    box-shadow: none !important;
+  }
 }
 
 div#view .ui.container > * {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.columns-view {
+  .ui.grid.column-grid {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }

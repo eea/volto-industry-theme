@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Logo, Navigation } from '@plone/volto/components';
-import Parteners from '../Logo/Parteners';
+import { Parteners } from '@eeacms/volto-industry-theme/components';
 
 /**
  * Header component class.
@@ -48,7 +48,7 @@ class Header extends Component {
         inverted
         className="header-wrapper"
         role="banner"
-        color="primary"
+        color="blue"
       >
         <Container>
           <div className="header">

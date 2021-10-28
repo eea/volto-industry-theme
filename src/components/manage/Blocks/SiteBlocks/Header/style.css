@@ -1,0 +1,48 @@
+.site-header > div {
+  display: flex;
+  align-items: center;
+}
+
+.site-header .info {
+  word-break: break-all;
+}
+
+.site-header h3.title {
+  margin-bottom: 1rem !important;
+  color: #4296b2;
+}
+
+.site-header .label {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.site-header .info {
+  margin-bottom: 0;
+}
+
+.site-header .ui.selection.dropdown {
+  padding-top: 0;
+  padding-bottom: 0;
+  color: #989898;
+  border: none;
+  padding-left: 0;
+  justify-content: flex-start !important;
+  flex-flow: row;
+  min-height: auto;
+}
+
+.site-header .ui.active.selection.dropdown:hover {
+  box-shadow: none !important;
+}
+
+.site-header .ui.selection.dropdown .dropdown.icon {
+  float: none;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  margin: 0;
+  margin-left: 0.5em !important;
+  font-size: 1em !important;
+}

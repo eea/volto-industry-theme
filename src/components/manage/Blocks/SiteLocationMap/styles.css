@@ -1,0 +1,14 @@
+.site-location-map {
+  display: flex;
+  justify-content: center;
+  height: 400px;
+}
+
+.site-location-map.visible.transition {
+  display: flex !important;
+}
+
+.site-location-map .ol-map {
+  height: 400px;
+  min-height: 400px;
+}

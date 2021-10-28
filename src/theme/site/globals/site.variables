@@ -6,7 +6,7 @@
        Fonts
 --------------------*/
 
-@fontName          : 'Lato';
+@fontName          : 'Muli';
 @fontSmoothing     : antialiased;
 
 @headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -29,10 +29,10 @@
 --------------------*/
 
 /* This is the single variable that controls them all */
-@emSize   : 14px;
+@emSize   : 16px;
 
 /* The size of page text  */
-@fontSize : 14px;
+@fontSize : 16px;
 
 
 /*-------------------
@@ -52,10 +52,10 @@
 --------------------*/
 
 @primaryColor        : @blue;
-@secondaryColor      : @black;
+@secondaryColor      : @orange;
 
 @lightPrimaryColor   : @lightBlue;
-@lightSecondaryColor : @lightBlack;
+@lightSecondaryColor : @lightOrange;
 
 /*--------------
   Page Heading
@@ -93,10 +93,10 @@
 --------------------*/
 
 /* Used on inputs, textarea etc */
-@focusedFormBorderColor: #85B7D9;
+@focusedFormBorderColor: @primaryColor;
 
 /* Used on dropdowns, other larger blocks */
-@focusedFormMutedBorderColor: #96C8DA;
+@focusedFormMutedBorderColor: @primaryColor;
 
 /*-------------------
         Sizes
@@ -138,7 +138,7 @@
        Links
 --------------------*/
 
-@linkColor           : #4183C4;
+@linkColor           : @orange;
 @linkUnderline       : none;
 @linkHoverColor      : darken(saturate(@linkColor, 20), 15, relative);
 @linkHoverUnderline  : @linkUnderline;
@@ -220,7 +220,7 @@
 --------------------*/
 
 /*---  Colors  ---*/
-@red              : #DB2828;
+@red              : #CD3B1F;
 @orange           : #E2776B;
 @yellow           : #FBBD08;
 @olive            : #B5CC18;
@@ -236,21 +236,21 @@
 
 /*---  Light Colors  ---*/
 @lightRed         : #FF695E;
-@lightOrange      : #FF851B;
+@lightOrange      : #E4847A;
 @lightYellow      : #FFE21F;
 @lightOlive       : #D9E778;
 @lightGreen       : #2ECC40;
 @lightTeal        : #6DFFFF;
-@lightBlue        : #54C8FF;
+@lightBlue        : #81C9DB;
 @lightViolet      : #A291FB;
 @lightPurple      : #DC73FF;
 @lightPink        : #FF8EDF;
 @lightBrown       : #D67C1C;
-@lightGrey        : #DCDDDE;
+@lightGrey        : #EDEDED;
 @lightBlack       : #545454;
 
 /*---   Dark colors  ---*/
-@darkBlue         : #11415D;
+@darkBlue         : #12435D;
 
 /*---   Neutrals  ---*/
 @fullBlack        : #000000;
