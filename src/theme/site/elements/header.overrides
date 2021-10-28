@@ -15,19 +15,19 @@
       }
 
       .ui.menu {
+        height: 100%;
         flex-wrap: wrap;
         margin-top: 0;
-        height: 100%;
 
         .item {
+          color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           text-transform: uppercase;
-          color: rgba(255, 255, 255, 0.8);
 
           &.active {
+            background: transparent;
             color: rgba(255, 255, 255, 1);
             font-weight: bold;
-            background: transparent;
           }
 
           &:hover {
@@ -45,7 +45,7 @@
 
     .header-partner-section {
       > * {
-       display: inline-block; 
+        display: inline-block;
       }
     }
 

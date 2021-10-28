@@ -3,9 +3,9 @@
 *******************************/
 
 .documentFirstHeading {
-  color: @primaryColor;
   border-bottom: none;
-  
+  color: @primaryColor;
+
   &::before {
     display: none;
   }

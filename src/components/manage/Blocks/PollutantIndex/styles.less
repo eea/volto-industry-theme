@@ -6,18 +6,18 @@
 @borderSize: 3px;
 
 .index-pollutants {
-  border: 1px solid #d4d4d5;
-  border-radius: 0.25rem;
-  background-color: #f6f6f6;
   padding-top: 1rem;
+  border: 1px solid #d4d4d5;
+  background-color: #f6f6f6;
+  border-radius: 0.25rem;
 
   .ui.selection.dropdown {
-    color: @primaryColor;
-    background: transparent;
     width: fit-content;
-    margin-bottom: 1rem;
     width: fit-content;
     border: none;
+    margin-bottom: 1rem;
+    background: transparent;
+    color: @primaryColor;
     font-size: 1em;
     font-weight: bold;
 
@@ -43,21 +43,21 @@
 
   .ui.menu {
     @textColor: var(--text-color, @blue);
-    background: transparent;
     border: none;
+    background: transparent;
     box-shadow: none;
 
     .item {
-      margin-bottom: 0 !important;
-      border: none !important;
       padding: @relative11px @relative14px;
+      border: none !important;
+      margin-bottom: 0 !important;
       color: @textColor;
       font-weight: bold;
 
       &:hover {
         .darkenFilter(0.9);
-        color: @textColor;
         background: transparent !important;
+        color: @textColor;
       }
 
       &::before {
@@ -74,14 +74,14 @@
         }
 
         &::before {
-          content: '';
-          display: block;
           position: absolute;
           top: calc(100% - @borderSize + 1px);
           left: 0.875em;
-          height: @borderSize;
+          display: block;
           width: calc(100% - 1.75em);
+          height: @borderSize;
           background-color: @textColor;
+          content: '';
         }
 
         &:hover {
@@ -96,8 +96,8 @@
   }
 
   .ui.tab {
-    background-color: transparent !important;
     border: none !important;
+    background-color: transparent !important;
   }
 
   h3 {

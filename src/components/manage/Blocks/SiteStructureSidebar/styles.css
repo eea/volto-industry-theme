@@ -6,9 +6,9 @@
 
 .sidebar-block .ui.menu .ui.menu {
   position: relative;
-  padding: 0;
   height: initial;
   min-height: unset;
+  padding: 0;
 }
 
 .sidebar-block .ui.menu .item.site-name {
@@ -66,27 +66,27 @@
 
 .sidebar-block .ui.menu .item span {
   display: block !important;
-  line-height: 1.1em;
-  white-space: nowrap;
   overflow: hidden;
+  line-height: 1.1em;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-block .ui.menu .ui.menu.entity .item:before {
-  display: block !important;
-  height: initial;
-  content: '';
   position: absolute !important;
   top: 0 !important;
-  left: -2px !important;
   right: unset;
   bottom: 50% !important;
+  left: -2px !important;
+  display: block !important;
   width: 0.75em !important;
+  height: initial;
   border: 2px solid #4296b3 !important;
-  border-left: 2px solid #4296b3 !important;
-  border-bottom: 2px solid #4296b3 !important;
   border-top: 0 none transparent !important;
   border-right: 0 none transparent !important;
+  border-bottom: 2px solid #4296b3 !important;
+  border-left: 2px solid #4296b3 !important;
+  content: '';
 }
 
 .sidebar-block .ui.menu .item,

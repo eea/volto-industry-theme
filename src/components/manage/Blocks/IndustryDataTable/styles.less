@@ -5,9 +5,9 @@
 
 .industry-table {
   display: flex;
-  overflow-x: auto;
   min-height: 400px;
   align-items: baseline;
+  overflow-x: auto;
 
   .ui.loader {
     align-self: center;
@@ -34,8 +34,8 @@
 
           &::after {
             display: none;
-            border-bottom: none;
             padding: 0;
+            border-bottom: none;
           }
         }
       }
@@ -45,18 +45,20 @@
       tr {
         border: none;
         background-color: #f8f8f8;
+
         &.hidden-row {
-          border: none;
           display: none;
+          border: none;
+
           td {
             padding: 0;
 
             .table-flex-container {
               display: flex;
-              justify-content: space-between;
               overflow: hidden;
-              transition: opacity 0.4s cubic-bezier(0, 0, 1, 1);
+              justify-content: space-between;
               padding: 0 0.4rem;
+              transition: opacity 0.4s cubic-bezier(0, 0, 1, 1);
 
               &.action {
                 padding: 0;
@@ -69,29 +71,33 @@
               }
 
               span.header {
-                font-weight: bold;
-                color: @primaryColor;
                 margin-bottom: 1em;
+                color: @primaryColor;
+                font-weight: bold;
               }
             }
           }
 
           &.show {
-            border: none;
             display: table-row;
+            border: none;
+
             td {
               padding: 20px 16px 20px 16px;
+
               .table-flex-container {
-                padding: 1em;
                 max-height: fit-content;
+                padding: 1em;
                 opacity: 1;
+
                 &.action {
                   padding: 0;
                   margin-top: 1em;
                 }
+
                 &.white {
-                  color: #000;
                   background: #fff;
+                  color: #000;
                 }
               }
             }
@@ -101,18 +107,18 @@
         &.hide {
           td {
             .table-flex-container {
-              padding: 0;
               max-height: 0;
+              padding: 0;
               opacity: 0;
             }
           }
         }
 
         button {
-          cursor: pointer;
-          background: transparent;
-          border: none;
           padding: 0;
+          border: none;
+          background: transparent;
+          cursor: pointer;
 
           &:focus {
             outline: none;
@@ -129,6 +135,7 @@
 
         &.row-active {
           font-weight: bold;
+
           button {
             svg.icon {
               fill: @orange !important;
@@ -148,14 +155,14 @@
 
     tfoot {
       th {
-        border: none;
         padding: 0.78571429em 0;
+        border: none;
       }
     }
 
     td {
-      border: none;
       padding: 4px 16px;
+      border: none;
     }
   }
 
@@ -165,17 +172,18 @@
 
   .ui.pagination.menu {
     border: 1px solid rgba(34, 36, 38, 0.15);
-    box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
     border-radius: 0.28571429rem;
+    box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
+
     .item {
       &:before {
         position: absolute;
-        content: '';
         top: 0;
         right: 0;
-        height: 100%;
         width: 1px;
+        height: 100%;
         background: rgba(34, 36, 38, 0.1);
+        content: '';
       }
 
       &:focus {

@@ -1,7 +1,7 @@
 .site-location-map {
   display: flex;
-  justify-content: center;
   height: 400px;
+  justify-content: center;
 }
 
 .site-location-map.visible.transition {

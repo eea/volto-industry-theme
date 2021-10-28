@@ -13,8 +13,8 @@
 }
 
 .site-header .label {
-  font-weight: bold;
   margin-bottom: 0;
+  font-weight: bold;
 }
 
 .site-header .info {
@@ -22,14 +22,14 @@
 }
 
 .site-header .ui.selection.dropdown {
+  min-height: auto;
+  flex-flow: row;
+  justify-content: flex-start !important;
   padding-top: 0;
   padding-bottom: 0;
-  color: #989898;
-  border: none;
   padding-left: 0;
-  justify-content: flex-start !important;
-  flex-flow: row;
-  min-height: auto;
+  border: none;
+  color: #989898;
 }
 
 .site-header .ui.active.selection.dropdown:hover {
@@ -37,12 +37,12 @@
 }
 
 .site-header .ui.selection.dropdown .dropdown.icon {
-  float: none;
   position: relative;
   top: auto;
-  left: auto;
   right: auto;
+  left: auto;
   margin: 0;
   margin-left: 0.5em !important;
+  float: none;
   font-size: 1em !important;
 }
