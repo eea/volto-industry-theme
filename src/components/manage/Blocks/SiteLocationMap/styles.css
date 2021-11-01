@@ -12,3 +12,15 @@
   height: 400px;
   min-height: 400px;
 }
+
+.site-location-map .privacy-protection {
+  width: 100%;
+}
+
+.site-location-map .privacy-protection .overlay {
+  position: relative;
+}
+
+.site-location-map .privacy-protection .overlay .wrapped {
+  opacity: 1;
+}

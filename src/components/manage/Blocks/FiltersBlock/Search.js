@@ -6,6 +6,7 @@ import { Input, List } from 'semantic-ui-react';
 import { doesNodeContainClick } from 'semantic-ui-react/dist/commonjs/lib';
 import Highlighter from 'react-highlight-words';
 import config from '@plone/volto/registry';
+import { trackSiteSearch } from '@eeacms/volto-matomo/utils';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
 import { getEncodedQueryString } from '@eeacms/volto-industry-theme/helpers';
 import { inputsKeys } from './dictionary';
@@ -141,6 +142,13 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
           type: value && type ? `search-${type}` : 'clear',
         },
       });
+
+      if (value && type) {
+        trackSiteSearch({
+          category: `Map/Table search-${type}`,
+          keyword: value,
+        });
+      }
     },
     [query, onChange, setQuery],
   );

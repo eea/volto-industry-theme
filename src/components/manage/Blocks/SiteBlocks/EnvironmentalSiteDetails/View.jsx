@@ -68,6 +68,7 @@ const View = (props) => {
         ),
       );
     }
+    /* eslint-disable-next-line */
   }, [provider_data, provider_data?.euregReportingYear, siteReportingYear]);
 
   return props.mode === 'edit' ? (

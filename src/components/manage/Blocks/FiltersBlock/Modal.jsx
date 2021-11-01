@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { Modal, Checkbox } from 'semantic-ui-react';
+import { trackSiteSearch } from '@eeacms/volto-matomo/utils';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
 import { inputsKeys, permitTypes } from './dictionary';
 import SelectWrapper from './SelectWrapper';
@@ -111,7 +112,7 @@ const ModalView = ({
   }, [query]);
 
   const applyFilters = React.useCallback(() => {
-    setQuery({
+    const newQuery = {
       ...inputs,
       filter_change: {
         counter: (query['filter_change']?.counter || 0) + 1,
@@ -119,6 +120,22 @@ const ModalView = ({
       },
       filter_search: null,
       filter_search_value: '',
+    };
+    setQuery(newQuery);
+    trackSiteSearch({
+      category: `Map/Table advanced-filter`,
+      keyword: JSON.stringify({
+        ...Object.keys(newQuery)
+          .filter(
+            (key) =>
+              inputsKeys.includes(key) &&
+              newQuery[key]?.filter((value) => value)?.length,
+          )
+          .reduce((obj, key) => {
+            obj[key] = newQuery[key]?.filter((value) => value);
+            return obj;
+          }, {}),
+      }),
     });
     setOpen(false);
     /* eslint-disable-next-line */

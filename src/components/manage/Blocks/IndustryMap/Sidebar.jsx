@@ -5,6 +5,7 @@ import cs from 'classnames';
 import { Dropdown, Checkbox } from 'semantic-ui-react';
 import { Icon } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
+import { trackSiteSearch } from '@eeacms/volto-matomo/utils';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
 import {
   getOptions,
@@ -67,18 +68,32 @@ class Sidebar extends React.Component {
     inputsKeys.forEach((key) => {
       newInputs[key] = query[key] || [];
     });
-    this.props.dispatch(
-      setQuery({
-        ...newInputs,
-        ...filters,
-        filter_change: {
-          counter: (query['filter_change']?.counter || 0) + 1,
-          type: 'simple-filter',
-        },
-        filter_search: null,
-        filter_search_value: '',
+    const newQuery = {
+      ...newInputs,
+      ...filters,
+      filter_change: {
+        counter: (query['filter_change']?.counter || 0) + 1,
+        type: 'simple-filter',
+      },
+      filter_search: null,
+      filter_search_value: '',
+    };
+    this.props.dispatch(setQuery(newQuery));
+    trackSiteSearch({
+      category: `Map/Table simple-filter`,
+      keyword: JSON.stringify({
+        ...Object.keys(newQuery)
+          .filter(
+            (key) =>
+              inputsKeys.includes(key) &&
+              newQuery[key]?.filter((value) => value)?.length,
+          )
+          .reduce((obj, key) => {
+            obj[key] = newQuery[key]?.filter((value) => value);
+            return obj;
+          }, {}),
       }),
-    );
+    });
   }
 
   clearFilters() {

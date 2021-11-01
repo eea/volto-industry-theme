@@ -56,6 +56,10 @@
   }
 }
 
+.__react_component_tooltip {
+  max-width: 320px;
+}
+
 div#view .ui.container > * {
   margin-bottom: 1.5rem;
 }
