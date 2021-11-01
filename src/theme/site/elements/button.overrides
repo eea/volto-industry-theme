@@ -1,0 +1,23 @@
+/*******************************
+         Theme Overrides
+*******************************/
+button {
+  @color: attr(color);
+  @textColor: var(--text-color, @darkBlue);
+  display: inline-block;
+  padding: @verticalPadding @horizontalPadding
+    (@verticalPadding + @shadowOffset);
+  border: 1px solid @textColor;
+  margin: 0em @horizontalMargin @verticalMargin 0em;
+  background-color: transparent;
+  border-radius: @borderRadius;
+  color: @textColor;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: @textColor;
+    color: #fff;
+  }
+}

@@ -1,0 +1,72 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.ui.basic.segment.header-wrapper {
+  .header {
+    flex-flow: row;
+    align-items: center;
+
+    .navigation {
+      margin-left: 1rem;
+
+      .hamburger {
+        display: flex;
+      }
+
+      .ui.menu {
+        height: 100%;
+        flex-wrap: wrap;
+        margin-top: 0;
+
+        .item {
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          text-transform: uppercase;
+
+          &.active {
+            background: transparent;
+            color: rgba(255, 255, 255, 1);
+            font-weight: bold;
+          }
+
+          &:hover {
+            color: rgba(255, 255, 255, 1);
+          }
+        }
+      }
+
+      .hamburger-inner,
+      .hamburger-inner::before,
+      .hamburger-inner::after {
+        background-color: #ffffff;
+      }
+    }
+
+    .header-partner-section {
+      > * {
+        display: inline-block;
+      }
+    }
+
+    @media only screen and (max-width: @largestTabletScreen) {
+      flex-flow: column;
+      align-items: initial;
+
+      .header-partner-section {
+        margin-top: 1rem;
+        margin-left: 1rem;
+      }
+
+      .navigation {
+        .ui.stackable.menu {
+          flex-direction: column;
+
+          .item {
+            width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}

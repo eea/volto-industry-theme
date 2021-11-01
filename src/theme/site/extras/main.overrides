@@ -1,0 +1,12 @@
+/*******************************
+        Text
+*******************************/
+
+.documentFirstHeading {
+  border-bottom: none;
+  color: @primaryColor;
+
+  &::before {
+    display: none;
+  }
+}

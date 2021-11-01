@@ -1,0 +1,26 @@
+.site-location-map {
+  display: flex;
+  height: 400px;
+  justify-content: center;
+}
+
+.site-location-map.visible.transition {
+  display: flex !important;
+}
+
+.site-location-map .ol-map {
+  height: 400px;
+  min-height: 400px;
+}
+
+.site-location-map .privacy-protection {
+  width: 100%;
+}
+
+.site-location-map .privacy-protection .overlay {
+  position: relative;
+}
+
+.site-location-map .privacy-protection .overlay .wrapped {
+  opacity: 1;
+}

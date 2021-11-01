@@ -1,0 +1,135 @@
+@verticalMargin: 0em;
+@horizontalMargin: 0.25em;
+
+@verticalPadding: @inputVerticalPadding;
+@horizontalPadding: 1.5em;
+
+@shadowDistance: 0em;
+@shadowOffset: (@shadowDistance / 2);
+
+@borderRadius: 1.5em;
+
+.outline-button {
+  @textColor: var(--text-color, @darkBlue);
+
+  &.style-preview,
+  a,
+  button,
+  .slate-editor-link {
+    display: inline-block;
+    padding: @verticalPadding @horizontalPadding
+      (@verticalPadding + @shadowOffset);
+    border: 1px solid @textColor;
+    margin: 0em @horizontalMargin @verticalMargin 0em;
+    background-color: transparent;
+    border-radius: @borderRadius;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    color: @textColor;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: @textColor;
+      color: #fff;
+    }
+  }
+}
+
+.solid-button {
+  @textColor: var(--text-color, @darkBlue);
+
+  &.style-preview,
+  a,
+  button,
+  .slate-editor-link {
+    display: inline-block;
+    padding: @verticalPadding @horizontalPadding
+      (@verticalPadding + @shadowOffset);
+    border: 1px solid @textColor;
+    margin: 0em @horizontalMargin @verticalMargin 0em;
+    background-color: transparent;
+    background-color: @textColor;
+    border-radius: @borderRadius;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+    &:hover {
+      .darkenFilter(0.9);
+    }
+  }
+}
+
+.type-1 {
+  height: 100%;
+
+  > .columns-view {
+    .ui.grid.column-grid .column > div {
+      height: 100%;
+
+      > .styled {
+        height: 100%;
+      }
+    }
+  }
+}
+
+.industrial-site-style {
+  margin-bottom: 0 !important;
+
+  > .columns-view {
+    > .ui.grid {
+      > .column {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+
+        &:first-child {
+          padding-right: 0;
+
+          > div {
+            height: 100%;
+            min-height: 800px;
+            background: #f3efee;
+          }
+
+          @media only screen and (max-width: @largestTabletScreen) {
+            padding-right: 1rem;
+
+            > div {
+              height: fit-content;
+              min-height: auto;
+            }
+          }
+        }
+
+        &:last-child {
+          padding-left: 0;
+
+          > div {
+            height: 100%;
+            padding: 1rem 1rem;
+            background: #f6f6f6;
+          }
+
+          @media only screen and (max-width: @largestTabletScreen) {
+            padding-left: 1rem;
+
+            > div {
+              min-height: 800px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar-block {
+    .ui.menu {
+      border: none;
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+// Full width handle
+body {
+  &.with-scrollbar {
+    .full-width {
+      left: calc(50% + @customScrollbarWidth / 2) !important;
+      width: calc(100vw - @customScrollbarWidth) !important;
+
+      &.padded {
+        padding-right: 0;
+        padding-left: 0;
+      }
+
+      &.padded {
+        @media only screen and (max-width: @largestTabletScreen) {
+          padding-right: 1rem;
+          padding-left: 1rem;
+        }
+      }
+    }
+  }
+
+  &.has-toolbar {
+    @media only screen and (min-width: @largestMobileScreen) {
+      .full-width {
+        left: calc(50% + 40px) !important;
+        width: calc(100vw - 80px) !important;
+      }
+
+      &.with-scrollbar {
+        .full-width {
+          left: calc(50% + 40px + @customScrollbarWidth / 2) !important;
+          width: calc(100vw - 80px - @customScrollbarWidth) !important;
+        }
+      }
+    }
+  }
+}
