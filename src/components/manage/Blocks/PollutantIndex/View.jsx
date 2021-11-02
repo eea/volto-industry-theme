@@ -295,7 +295,6 @@ const View = ({ providers_data, query, setQuery, ...props }) => {
         ?.filter((opt) => opt.value !== null) || []
     );
   }, [providers_data]);
-  console.log('HERE', pollutantsOptions);
 
   return (
     <div className="index-pollutants">
