@@ -286,13 +286,16 @@ const View = ({ providers_data, query, setQuery, ...props }) => {
   const pollutantsOptions = React.useMemo(() => {
     const { index_pollutants } = providers_data;
     return (
-      index_pollutants?.pollutantId?.map((_, index) => ({
-        key: index_pollutants.code[index],
-        value: index_pollutants.pollutantId[index],
-        text: index_pollutants.name[index],
-      })) || []
+      index_pollutants?.pollutantId
+        ?.map((_, index) => ({
+          key: index_pollutants.code[index],
+          value: index_pollutants.pollutantId[index],
+          text: index_pollutants.name[index],
+        }))
+        ?.filter((opt) => opt.value !== null) || []
     );
   }, [providers_data]);
+  console.log('HERE', pollutantsOptions);
 
   return (
     <div className="index-pollutants">
