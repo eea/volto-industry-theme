@@ -97,13 +97,15 @@ const applyConfig = (config) => {
     ],
   };
 
-  return [
-    installCustomViews,
-    installNavigationBlock,
-    installEprtrSpecificBlocks,
-    installCustomConnectedBlocks,
-    installAppExtras,
-  ].reduce((acc, apply) => apply(acc), config);
+  return config;
+
+  // return [
+  //   installCustomViews,
+  //   installNavigationBlock,
+  //   installEprtrSpecificBlocks,
+  //   installCustomConnectedBlocks,
+  //   installAppExtras,
+  // ].reduce((acc, apply) => apply(acc), config);
 };
 
 export default applyConfig;

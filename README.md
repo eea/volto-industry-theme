@@ -13,6 +13,8 @@ Demo GIF
 
 ### Try volto-industry-theme with Docker
 
+**IMPORTANT:** make sure that you don't wait for `@breadcrumbs` request in your frontend cypress tests as this theme disables breadcrumbs.
+
 1. Get the latest Docker images
 
    ```
