@@ -27,7 +27,10 @@ const View = ({ location, data, navigation }) => {
     <Menu className="navigation-block">
       <MenuWrapper data={data}>
         {items.map((item) => (
-          <Menu.Item key={item.url} active={pathname === getBaseUrl(item.url)}>
+          <Menu.Item
+            key={item.url}
+            active={pathname.includes(getBaseUrl(item.url))}
+          >
             <UniversalLink
               href={`${item.url}${location.search}`}
               ignoreScroll={data.ignoreScroll}
