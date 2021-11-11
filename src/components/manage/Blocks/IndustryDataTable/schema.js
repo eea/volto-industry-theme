@@ -10,7 +10,7 @@ export default () => ({
   properties: {
     link: {
       title: 'Site details path',
-      widget: 'object_by_path',
+      widget: 'url',
     },
   },
   required: [],

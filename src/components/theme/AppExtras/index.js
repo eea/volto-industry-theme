@@ -4,7 +4,7 @@ export default (config) => {
   config.settings.appExtras = [
     ...(config.settings.appExtras || []),
     {
-      match: '/**/edit',
+      match: ['/edit', '/**/edit'],
       component: CopyPaste,
     },
   ];

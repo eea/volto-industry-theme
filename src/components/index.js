@@ -32,6 +32,7 @@ import installPollutantIndex from './manage/Blocks/PollutantIndex';
 /*---  Custom connected blocks  ---*/
 import installCustomConnectedList from './manage/Blocks/List';
 import installCustomConnectedSelect from './manage/Blocks/Select';
+import installCustomTableau from './manage/Blocks/TableauBlock';
 /*---  App extras  ---*/
 import installAppExtras from './theme/AppExtras';
 
@@ -48,10 +49,11 @@ const installCustomViews = (config) => {
 };
 
 const installCustomConnectedBlocks = (config) => {
-  return [installCustomConnectedList, installCustomConnectedSelect].reduce(
-    (acc, apply) => apply(acc),
-    config,
-  );
+  return [
+    installCustomConnectedList,
+    installCustomConnectedSelect,
+    installCustomTableau,
+  ].reduce((acc, apply) => apply(acc), config);
 };
 
 const installEprtrSpecificBlocks = (config) => {

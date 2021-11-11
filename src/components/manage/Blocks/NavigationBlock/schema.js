@@ -31,7 +31,7 @@ export default {
   properties: {
     parent: {
       title: 'Parent',
-      widget: 'object_by_path',
+      widget: 'url',
     },
     pages: {
       title: 'Pages',

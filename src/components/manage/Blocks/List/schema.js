@@ -44,7 +44,7 @@ const getSchema = (props) => {
     properties: {
       url: {
         title: 'Url',
-        widget: 'object_by_path',
+        widget: 'url',
       },
       value: {
         title: 'Value',

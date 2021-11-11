@@ -3,11 +3,7 @@ import { tableauVersions, getLatestTableauVersion } from 'tableau-api-js';
 const urlParametersSchema = {
   title: 'Parameter',
   fieldsets: [
-    {
-      id: 'default',
-      title: 'Default',
-      fields: ['field', 'urlParam'],
-    },
+    { id: 'default', title: 'Default', fields: ['field', 'urlParam'] },
   ],
   properties: {
     field: {
@@ -46,7 +42,7 @@ const breakpointUrlSchema = (config) => {
   };
 };
 
-export default (config, provider_keys = []) => ({
+export default (config) => ({
   title: 'Tableau',
   fieldsets: [
     {
@@ -55,14 +51,15 @@ export default (config, provider_keys = []) => ({
       fields: ['version', 'url', 'title', 'description'],
     },
     {
-      id: 'data_connector',
-      title: 'Data connector options',
-      fields: ['provider_url', 'allowedParams', 'disabledKey'],
-    },
-    {
       id: 'options',
       title: 'Options',
-      fields: ['sheetname', 'hideTabs', 'hideToolbar', 'toolbarPosition'],
+      fields: [
+        'sheetname',
+        'hideTabs',
+        'hideToolbar',
+        'autoScale',
+        'toolbarPosition',
+      ],
     },
     {
       id: 'extra_options',
@@ -82,22 +79,6 @@ export default (config, provider_keys = []) => ({
     url: {
       title: 'Url',
       widget: 'textarea',
-    },
-    provider_url: {
-      title: 'Data provider',
-      widget: 'url',
-    },
-    allowedParams: {
-      title: 'Allowed params',
-      type: 'array',
-      items: {
-        choices: [],
-      },
-    },
-    disabledKey: {
-      title: 'Disabled',
-      type: 'array',
-      choices: [...provider_keys.map((key) => [key, key])],
     },
     title: {
       title: 'Title',
@@ -120,6 +101,12 @@ export default (config, provider_keys = []) => ({
       title: 'Hide toolbar',
       type: 'boolean',
       default: false,
+    },
+    autoScale: {
+      title: 'Auto scale',
+      type: 'boolean',
+      default: false,
+      description: 'Scale down tableau according to width',
     },
     toolbarPosition: {
       title: 'Toolbar position',

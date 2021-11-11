@@ -13,7 +13,7 @@ const getSchema = (props) => {
     properties: {
       pathname: {
         title: 'Parent pathname',
-        widget: 'object_by_path',
+        widget: 'url',
       },
       pages: {
         title: 'Pages',
