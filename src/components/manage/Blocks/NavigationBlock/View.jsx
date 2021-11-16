@@ -29,7 +29,11 @@ const View = ({ location, data, navigation }) => {
         {items.map((item) => (
           <Menu.Item
             key={item.url}
-            active={pathname.includes(getBaseUrl(item.url))}
+            active={
+              data.isExact
+                ? pathname === item.url
+                : pathname.includes(getBaseUrl(item.url))
+            }
           >
             <UniversalLink
               href={`${item.url}${location.search}`}

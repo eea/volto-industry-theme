@@ -85,7 +85,7 @@ export default (config, provider_keys = []) => ({
     },
     provider_url: {
       title: 'Data provider',
-      widget: 'url',
+      widget: 'object_by_path',
     },
     allowedParams: {
       title: 'Allowed params',

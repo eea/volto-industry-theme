@@ -13,7 +13,7 @@ const providerSchema = {
     },
     url: {
       title: 'Provider url',
-      widget: 'url',
+      widget: 'object_by_path',
     },
   },
   required: [],
