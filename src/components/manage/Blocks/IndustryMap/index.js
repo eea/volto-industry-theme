@@ -127,6 +127,7 @@ export const getLocationExtent = (data) => {
 export const getSiteExtent = (data) => {
   const db_version =
     process.env.RAZZLE_DB_VERSION || config.settings.db_version || 'latest';
+
   return axios.get(
     `${config.settings.providerUrl}?${getEncodedQueryString(`SELECT
     MIN(shape_wm.STX) AS MIN_X,
@@ -134,7 +135,10 @@ export const getSiteExtent = (data) => {
     MAX(shape_wm.STX) AS MAX_X,
     MAX(shape_wm.STY) AS MAX_Y
     FROM [IED].[${db_version}].[SiteMap]
-    WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${data.text}%'`)}`,
+    WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${data.text.replace(
+      "'",
+      "''",
+    )}%'`)}`,
   );
 };
 

@@ -25,7 +25,7 @@ export default {
     {
       id: 'default',
       title: 'Default',
-      fields: ['ignoreScroll', 'parent', 'pages'],
+      fields: ['ignoreScroll', 'isExact', 'parent', 'pages'],
     },
   ],
   properties: {
@@ -37,6 +37,10 @@ export default {
       title: 'Pages',
       schema: pagesSchema,
       widget: 'object_list',
+    },
+    isExact: {
+      title: 'Is exact',
+      type: 'boolean',
     },
     ignoreScroll: {
       title: 'Ignore scroll',
