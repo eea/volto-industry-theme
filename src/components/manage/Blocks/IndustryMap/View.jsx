@@ -15,7 +15,6 @@ import { Layers, Layer } from '@eeacms/volto-openlayers-map/Layers';
 import { openlayers } from '@eeacms/volto-openlayers-map';
 
 import PrivacyProtection from '@eeacms/volto-industry-theme/components/PrivacyProtection';
-import { inputsKeys } from '@eeacms/volto-industry-theme/components/manage/Blocks/FiltersBlock/dictionary';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
 import { emitEvent } from '@eeacms/volto-industry-theme/helpers';
 import {
@@ -27,6 +26,7 @@ import {
   getLocationExtent,
   getSiteExtent,
   getCountriesExtent,
+  getWhereStatement,
 } from './index';
 
 import Sidebar from './Sidebar';
@@ -38,60 +38,111 @@ import navigationSVG from '@plone/volto/icons/navigation.svg';
 import './styles.less';
 
 let _REQS = 0;
+let _COUNTER = 0;
+let _PREV = 0;
 const zoomSwitch = 6;
 let timer;
+
+function nope() {}
 
 const debounce = (func, ...args) => {
   if (timer) clearTimeout(timer);
   timer = setTimeout(func, 200, ...args);
 };
 
-const arrayContainsString = (arr = [], value) => {
-  let contains = false;
-  let nullValues = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (!arr[i]) {
-      nullValues++;
-    } else if (
-      value &&
-      typeof value === 'string' &&
-      typeof arr[i] === 'string' &&
-      arr[i].includes(value)
-    ) {
-      contains = true;
-      break;
-      /* eslint-disable-next-line */
-    } else if (value && arr[i] == value) {
-      contains = true;
-      break;
-    }
-  }
-  if (!contains && nullValues === arr.length) return true;
-  return contains;
+const getSitesSource = (self) => {
+  const { format, source, tilegrid } = openlayers;
+  return new source.Vector({
+    loader: function (extent, resolution, projection) {
+      _REQS++;
+      _COUNTER++;
+      const mapElement = document.querySelector('#industry-map');
+      const esrijsonFormat = new format.EsriJSON();
+      this.resolution = resolution;
+      const where = getWhereStatement(self.props.query);
+      const url = getLayerSitesURL(extent);
+      jsonp(
+        url,
+        {
+          prefix: '__jps',
+          param:
+            (where
+              ? qs.stringify({
+                  where,
+                })
+              : '') + '&callback',
+        },
+        (error, response) => {
+          if (window['__where'] !== where) return;
+          if (!error) {
+            let features = esrijsonFormat.readFeatures(response, {
+              featureProjection: projection,
+            });
+            if (features?.length > 0) {
+              this.addFeatures(features);
+            }
+          }
+          if (!--_REQS) {
+            this.dispatchEvent('load');
+            emitEvent(mapElement, 'ol-features-load', {
+              bubbles: false,
+              detail: {
+                loaded: true,
+              },
+            });
+          }
+        },
+      );
+      emitEvent(mapElement, 'ol-features-load', {
+        bubbles: false,
+        detail: {
+          loaded: false,
+        },
+      });
+    },
+    strategy: function (extent, resolution) {
+      const tileGrid = tilegrid.createXYZ({
+        tileSize: 256,
+      });
+      let z = tileGrid.getZForResolution(resolution);
+      let tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
+      /** @type {Array<import("./extent.js").Extent>} */
+      let extents = [];
+      /** @type {import("./tilecoord.js").TileCoord} */
+      let tileCoord = [z, 0, 0];
+      for (
+        tileCoord[1] = tileRange.minX;
+        tileCoord[1] <= tileRange.maxX;
+        ++tileCoord[1]
+      ) {
+        for (
+          tileCoord[2] = tileRange.minY;
+          tileCoord[2] <= tileRange.maxY;
+          ++tileCoord[2]
+        ) {
+          extents.push(tileGrid.getTileCoordExtent(tileCoord));
+        }
+      }
+      if (this.resolution && this.resolution !== resolution) {
+        extents.forEach((newExtent) => {
+          this.loadedExtentsRtree_.forEach((loadedExtent) => {
+            const bigExtent = loadedExtent.extent;
+            if (
+              openlayers.extent.containsExtent(bigExtent, newExtent) &&
+              bigExtent[0] !== newExtent[0] &&
+              bigExtent[1] !== newExtent[1] &&
+              bigExtent[2] !== newExtent[2] &&
+              bigExtent[3] !== newExtent[3]
+            ) {
+              this.loadedExtentsRtree_.remove(loadedExtent);
+            }
+          });
+        });
+      }
+      return extents;
+    },
+  });
 };
-
-const stringContainedInArray = (value, arr = []) => {
-  let contains = false;
-  let nullValues = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (!arr[i]) {
-      nullValues++;
-    } else if (value && value.includes(arr[i])) {
-      contains = true;
-      break;
-    }
-  }
-  if (!contains && nullValues === arr.length) return true;
-  return contains;
-};
-
-const facility_types = {
-  'EPRTR, NONEPRTR': 'EPRTR',
-  'NONEPRTR, EPRTR': 'EPRTR',
-  EPRTR: 'EPRTR',
-  NONEPRTR: 'NONEPRTR',
-};
-
 class View extends React.PureComponent {
   /**
    * Property types.
@@ -109,7 +160,6 @@ class View extends React.PureComponent {
   constructor(props) {
     super(props);
     const { style } = openlayers;
-    this.updateLayersStyle = this.updateLayersStyle.bind(this);
     this.onFeatureLoad = this.onFeatureLoad.bind(this);
     this.centerToPosition = this.centerToPosition.bind(this);
     this.centerToUserLocation = this.centerToUserLocation.bind(this);
@@ -117,9 +167,7 @@ class View extends React.PureComponent {
     this.onPointermove = this.onPointermove.bind(this);
     this.onClick = this.onClick.bind(this);
     this.onMoveend = this.onMoveend.bind(this);
-    this.isFeatureVisible = this.isFeatureVisible.bind(this);
     this.state = {
-      hasFilters: false,
       mapRendered: false,
       loading: false,
     };
@@ -132,6 +180,11 @@ class View extends React.PureComponent {
   }
 
   componentDidMount() {
+    window['__where'] = getWhereStatement(this.props.query);
+    window['__sitename'] =
+      this.props.query.filter_search?.type === 'site'
+        ? this.props.filter_search.text
+        : null;
     document
       .querySelector('#industry-map')
       .addEventListener('ol-features-load', this.onFeatureLoad);
@@ -148,16 +201,25 @@ class View extends React.PureComponent {
     if (!this.state.mapRendered || !this.map.current) return;
     const { extent, proj } = openlayers;
     const { filter_change, filter_search } = this.props.query;
+    window['__where'] = getWhereStatement(this.props.query);
+    window['__sitename'] =
+      filter_search?.type === 'site' ? filter_search.text : null;
     const filter_countries = (this.props.query.filter_countries || []).filter(
       (value) => value,
     );
     if (!prevState.mapRendered) {
       this.centerToUserLocation();
-      this.updateLayersStyle();
     }
     if (filter_change?.counter !== prevProps.query.filter_change?.counter) {
       /* Trigger update of features style */
-      this.updateLayersStyle();
+      for (let i = _PREV; i < _COUNTER; i++) {
+        window[`__jps${i}`] = nope;
+      }
+      _PREV = _COUNTER;
+      _REQS = 0;
+      this.layerSites.current.getSource().refresh();
+      this.layerSites.current.changed();
+      this.layerRegions.current.changed();
       /* Fit view if necessary */
       if (filter_change.type === 'search-location') {
         getLocationExtent(filter_search).then(({ data }) => {
@@ -243,63 +305,6 @@ class View extends React.PureComponent {
           }
         });
       }
-    }
-  }
-
-  updateLayersStyle() {
-    const { query } = this.props;
-    let hasFilters = false;
-    for (const key of inputsKeys) {
-      if ((query[key] || []).filter((v) => v).length) {
-        hasFilters = true;
-        break;
-      }
-    }
-    if (query.filter_search?.text && query.filter_search?.type) {
-      hasFilters = true;
-    }
-    if (hasFilters) {
-      this.layerSites.current.setStyle((feature) => {
-        if (!this.map.current) return;
-        const zoom = this.map.current.getView().getZoom();
-        const visible = this.isFeatureVisible(feature);
-        if (!visible) return;
-        const style =
-          zoom >= 8
-            ? visible === 'highlight'
-              ? this.styles.bigGreenCircle
-              : this.styles.bigCircle
-            : visible === 'highlight'
-            ? this.styles.smallGreenCircle
-            : this.styles.smallCircle;
-        return style;
-      });
-      this.layerRegions.current.setStyle(() => {
-        return;
-      });
-    } else {
-      this.layerSites.current.setStyle((feature) => {
-        if (!this.map.current) return;
-        const zoom = this.map.current.getView().getZoom();
-        if (zoom < zoomSwitch) return;
-        const visible = this.isFeatureVisible(feature);
-        if (!visible) return;
-        const style =
-          zoom >= 8
-            ? visible === 'highlight'
-              ? this.styles.bigGreenCircle
-              : this.styles.bigCircle
-            : visible === 'highlight'
-            ? this.styles.smallGreenCircle
-            : this.styles.smallCircle;
-        return style;
-      });
-      this.layerRegions.current.setStyle(() => {
-        if (!this.map.current) return;
-        const zoom = this.map.current.getView().getZoom();
-        if (zoom >= zoomSwitch) return;
-        return this.styles.regionCircle;
-      });
     }
   }
 
@@ -422,7 +427,7 @@ class View extends React.PureComponent {
     const zoom = e.map.getView().getZoom();
     if (
       __SERVER__ ||
-      zoom < zoomSwitch ||
+      (zoom < zoomSwitch && !window['__where']) ||
       !this.overlayPopup.current ||
       !this.overlayPopupDetailed.current
     ) {
@@ -457,94 +462,15 @@ class View extends React.PureComponent {
   }
 
   onMoveend(e) {
+    if (!e.map) return;
     const extent = e.map.getView().calculateExtent(e.map.getSize());
     this.props.setQuery({
       map_extent: extent,
     });
   }
 
-  isFeatureVisible(feature) {
-    const properties = feature.getProperties();
-    const {
-      filter_bat_conclusions,
-      filter_countries,
-      filter_facility_types,
-      filter_industries,
-      filter_nuts_1,
-      filter_nuts_2,
-      filter_permit_types,
-      filter_permit_years,
-      filter_plant_types,
-      filter_pollutant_groups,
-      filter_pollutants,
-      filter_reporting_years,
-      filter_river_basin_districts,
-      filter_search,
-    } = this.props.query;
-    const {
-      bat_conclusions,
-      countryCode,
-      facilityTypes,
-      eea_activities,
-      nuts_regions,
-      permit_types,
-      permit_years,
-      plantTypes,
-      air_groups,
-      water_groups,
-      pollutants,
-      Site_reporting_year,
-      rbds,
-      siteName,
-    } = properties;
-    if (filter_search?.type === 'site' && filter_search.text !== siteName) {
-      return false;
-    } else if (
-      filter_search?.type === 'site' &&
-      filter_search.text === siteName
-    ) {
-      return 'highlight';
-    }
-    if (!arrayContainsString(filter_reporting_years, Site_reporting_year)) {
-      return false;
-    }
-    if (!arrayContainsString(filter_countries, countryCode)) return false;
-    if (!stringContainedInArray(nuts_regions, filter_nuts_2)) return false;
-    if (!stringContainedInArray(nuts_regions, filter_nuts_1)) return false;
-    if (!stringContainedInArray(rbds, filter_river_basin_districts)) {
-      return false;
-    }
-    if (!arrayContainsString(filter_bat_conclusions, bat_conclusions)) {
-      return false;
-    }
-    if (!arrayContainsString(filter_industries, eea_activities)) return false;
-    if (!stringContainedInArray(permit_types, filter_permit_types)) {
-      return false;
-    }
-    if (!arrayContainsString(filter_permit_years, permit_years)) return false;
-    if (!arrayContainsString(filter_plant_types, plantTypes)) return false;
-    if (
-      !arrayContainsString(filter_pollutant_groups, air_groups) &&
-      !arrayContainsString(filter_pollutant_groups, water_groups)
-    ) {
-      return false;
-    }
-    if (!stringContainedInArray(pollutants, filter_pollutants)) return false;
-    if ((filter_facility_types || []).filter((item) => item).length) {
-      const type = facility_types[facilityTypes];
-      for (let i = 0; i < filter_facility_types.length; i++) {
-        if (filter_facility_types[i] === type) {
-          return true;
-        }
-      }
-      return false;
-    }
-    return true;
-  }
-
   render() {
     const { format, loadingstrategy, proj, source, tilegrid } = openlayers;
-
     if (__SERVER__) return '';
     return (
       <div className="industry-map-wrapper">
@@ -629,7 +555,12 @@ class View extends React.PureComponent {
                       ),
                     })
                   }
-                  style={null}
+                  style={() => {
+                    if (!this.map.current) return;
+                    const zoom = this.map.current.getView().getZoom();
+                    if (zoom >= zoomSwitch || !!window['__where']) return;
+                    return this.styles.regionCircle;
+                  }}
                   title="1.Regions"
                   zIndex={1}
                 />
@@ -638,97 +569,21 @@ class View extends React.PureComponent {
                     this.layerSites.current = data?.layer;
                   }}
                   className="ol-layer-sites"
-                  source={
-                    new source.Vector({
-                      loader: function (extent, resolution, projection) {
-                        const mapElement = document.querySelector(
-                          '#industry-map',
-                        );
-                        _REQS++;
-                        const esrijsonFormat = new format.EsriJSON();
-                        this.resolution = resolution;
-                        let url = getLayerSitesURL(extent);
-                        jsonp(url, {}, (error, response) => {
-                          if (!error) {
-                            let features = esrijsonFormat.readFeatures(
-                              response,
-                              {
-                                featureProjection: projection,
-                              },
-                            );
-                            if (features?.length > 0) {
-                              this.addFeatures(features);
-                            }
-                          }
-                          if (!--_REQS) {
-                            this.dispatchEvent('load');
-                            emitEvent(mapElement, 'ol-features-load', {
-                              bubbles: false,
-                              detail: {
-                                loaded: true,
-                              },
-                            });
-                          }
-                        });
-                        emitEvent(mapElement, 'ol-features-load', {
-                          bubbles: false,
-                          detail: {
-                            loaded: false,
-                          },
-                        });
-                      },
-                      strategy: function (extent, resolution) {
-                        const tileGrid = tilegrid.createXYZ({
-                          tileSize: 256,
-                        });
-                        let z = tileGrid.getZForResolution(resolution);
-                        let tileRange = tileGrid.getTileRangeForExtentAndZ(
-                          extent,
-                          z,
-                        );
-                        /** @type {Array<import("./extent.js").Extent>} */
-                        let extents = [];
-                        /** @type {import("./tilecoord.js").TileCoord} */
-                        let tileCoord = [z, 0, 0];
-                        for (
-                          tileCoord[1] = tileRange.minX;
-                          tileCoord[1] <= tileRange.maxX;
-                          ++tileCoord[1]
-                        ) {
-                          for (
-                            tileCoord[2] = tileRange.minY;
-                            tileCoord[2] <= tileRange.maxY;
-                            ++tileCoord[2]
-                          ) {
-                            extents.push(
-                              tileGrid.getTileCoordExtent(tileCoord),
-                            );
-                          }
-                        }
-                        if (this.resolution && this.resolution !== resolution) {
-                          extents.forEach((newExtent) => {
-                            this.loadedExtentsRtree_.forEach((loadedExtent) => {
-                              const bigExtent = loadedExtent.extent;
-                              if (
-                                openlayers.extent.containsExtent(
-                                  bigExtent,
-                                  newExtent,
-                                ) &&
-                                bigExtent[0] !== newExtent[0] &&
-                                bigExtent[1] !== newExtent[1] &&
-                                bigExtent[2] !== newExtent[2] &&
-                                bigExtent[3] !== newExtent[3]
-                              ) {
-                                this.loadedExtentsRtree_.remove(loadedExtent);
-                              }
-                            });
-                          });
-                        }
-                        return extents;
-                      },
-                    })
-                  }
-                  style={null}
+                  source={getSitesSource(this)}
+                  style={() => {
+                    if (!this.map.current) return;
+                    const zoom = this.map.current.getView().getZoom();
+                    if (zoom < zoomSwitch && !window['__where']) return;
+                    const style =
+                      zoom >= 8
+                        ? window['__sitename']
+                          ? this.styles.bigGreenCircle
+                          : this.styles.bigCircle
+                        : window['__sitename']
+                        ? this.styles.smallGreenCircle
+                        : this.styles.smallCircle;
+                    return style;
+                  }}
                   title="2.Sites"
                   zIndex={1}
                 />
