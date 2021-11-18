@@ -8,22 +8,34 @@ import IndustryMapView from './View';
 
 const filters = [
   {
-    queryKey: 'batConclusionCode',
+    queryKey: 'filter_bat_conclusions',
     featureKey: 'batConclusionCode',
     op: 'like',
   },
-  { queryKey: 'EEAActivity', featureKey: 'eea_activities', op: 'like' },
+  { queryKey: 'filter_industries', featureKey: 'eea_activities', op: 'like' },
   { queryKey: 'nuts_latest', featureKey: 'nuts_regions', op: 'like' },
-  { queryKey: 'permitType', featureKey: 'permit_types', op: 'like' },
-  { queryKey: 'permitYear', featureKey: 'permitYears', op: 'like' },
-  { queryKey: 'facilityTypes', featureKey: 'facilityTypes', op: 'eqStr' },
-  { queryKey: 'plantTypes', featureKey: 'plantTypes', op: 'like' },
-  { queryKey: 'pollutant', featureKey: 'pollutants', op: 'like' },
-  { queryKey: 'pollutantGroup', featureKey: 'air_groups', op: 'like' },
-  { queryKey: 'reportingYear', featureKey: 'Site_reporting_year', op: 'eq' },
-  { queryKey: 'riverBasin', featureKey: 'rbds', op: 'like' },
-  { queryKey: 'siteCountry', featureKey: 'countryCode', op: 'like' },
-  { queryKey: 'siteTerm', featureKey: 'siteName', op: 'like' },
+  { queryKey: 'filter_permit_types', featureKey: 'permit_types', op: 'like' },
+  { queryKey: 'filter_permit_years', featureKey: 'permitYears', op: 'like' },
+  // {
+  //   queryKey: 'filter_facility_types',
+  //   featureKey: 'facilityTypes',
+  //   op: 'eqStr',
+  // },
+  { queryKey: 'filter_plant_types', featureKey: 'plantTypes', op: 'like' },
+  { queryKey: 'filter_pollutants', featureKey: 'pollutants', op: 'like' },
+  {
+    queryKey: 'filter_pollutant_groups',
+    featureKey: 'pollutant_groups',
+    op: 'like',
+  },
+  {
+    queryKey: 'filter_reporting_years',
+    featureKey: 'Site_reporting_year',
+    op: 'eq',
+  },
+  { queryKey: 'filter_river_basin_districts', featureKey: 'rbds', op: 'like' },
+  { queryKey: 'filter_countries', featureKey: 'countryCode', op: 'like' },
+  // { queryKey: 'filter_search', featureKey: 'siteName', op: 'like' },
 ];
 
 export const dataprotection = {
@@ -79,6 +91,46 @@ export const getStyles = (style) => {
   });
 
   return obj;
+};
+
+const getLatestRegions = (query) => {
+  const siteCountries = query.filter_countries;
+  const regions = query.filter_nuts_1;
+  const provinces = query.filter_nuts_2;
+  let nuts = [];
+  let nuts_latest = [];
+
+  siteCountries &&
+    siteCountries.forEach((country) => {
+      const filteredRegions = regions
+        ? regions.filter((region) => {
+            return region && region.includes(country);
+          })
+        : [];
+      if (filteredRegions.length) {
+        filteredRegions.forEach((region) => {
+          const filteredProvinces = provinces
+            ? provinces.filter((province) => {
+                return province && province.includes(region);
+              })
+            : [];
+          if (filteredProvinces.length) {
+            filteredProvinces.forEach((province) => {
+              nuts.push(`${province},${region},${country}`);
+              nuts_latest.push(province);
+            });
+          } else {
+            nuts.push(`${region},${country}`);
+            nuts_latest.push(region);
+          }
+        });
+      }
+    });
+
+  return {
+    nuts,
+    nuts_latest,
+  };
 };
 
 export const getLayerSitesURL = (extent) => {
@@ -192,15 +244,23 @@ export const filterFeature = (feature, query = {}) => {
   return ok;
 };
 
-export const getWhereStatement = (query = {}) => {
-  let where = [];
-  for (let filter = 0; filter < filters.length; filter++) {
+export const getWhereStatement = (data) => {
+  const query = { ...data, nuts_latest: getLatestRegions(data).nuts_latest };
+  const facility_types = query.filter_facility_types;
+  const search = query.filter_search;
+  let filter,
+    where = [];
+  for (filter = 0; filter < filters.length; filter++) {
     const { queryKey, featureKey, op } = filters[filter];
+    where[filter] = [];
     if (Array.isArray(query[queryKey])) {
-      where[filter] = [];
       for (let item = 0; item < query[queryKey].length; item++) {
         const value = query[queryKey][item];
-        if (op === 'like' && value) {
+        if (value && featureKey === 'pollutant_groups') {
+          where[filter].push(
+            `(air_groups LIKE '%${value}%') OR (water_groups LIKE '%${value}%')`,
+          );
+        } else if (op === 'like' && value) {
           where[filter].push(`${featureKey} LIKE '%${value}%'`);
         } else if (op === 'eq' && value) {
           where[filter].push(`${featureKey} = ${value}`);
@@ -208,17 +268,18 @@ export const getWhereStatement = (query = {}) => {
           where[filter].push(`${featureKey} = '${value}''`);
         }
       }
-    } else if (query[queryKey]) {
-      where[filter] = [];
-      const value = query[queryKey];
-      if (op === 'like' && value) {
-        where[filter].push(`${featureKey} LIKE '%${value}%'`);
-      } else if (op === 'eq' && value) {
-        where[filter].push(`${featureKey} = ${value}`);
-      } else if (op === 'eqStr' && value) {
-        where[filter].push(`${featureKey} = '${value}''`);
-      }
     }
+  }
+
+  if (facility_types?.filter((v) => v)?.length === 1) {
+    const type = facility_types.includes('EPRTR') ? 'EPRTR' : 'NONEPRTR';
+    where[filter++] = [
+      `(facilityTypes LIKE '${type}%') OR (facilityTypes LIKE '% ${type}')`,
+    ];
+  }
+
+  if (search?.type === 'site' && search?.text) {
+    where[filter++] = [`siteName LIKE '${search.text}%'`];
   }
 
   return where
