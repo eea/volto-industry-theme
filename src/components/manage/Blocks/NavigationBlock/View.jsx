@@ -7,7 +7,7 @@ import { getBaseUrl } from '@plone/volto/helpers';
 import './styles.less';
 
 const MenuWrapper = ({ children, data }) => {
-  if (data.styles?.stretch === 'stretch') {
+  if (data.styles?.align === 'full') {
     return <Container>{children}</Container>;
   }
   return children;

@@ -41,13 +41,13 @@ let _REQS = 0;
 let _COUNTER = 0;
 let _PREV = 0;
 const zoomSwitch = 6;
-let timer;
+let timer = [];
 
 function nope() {}
 
-const debounce = (func, ...args) => {
-  if (timer) clearTimeout(timer);
-  timer = setTimeout(func, 200, ...args);
+const debounce = (func, index, timeout = 200, ...args) => {
+  if (timer[index]) clearTimeout(timer[index]);
+  timer[index] = setTimeout(func, timeout, ...args);
 };
 
 const getSitesSource = (self) => {
@@ -212,14 +212,20 @@ class View extends React.PureComponent {
     }
     if (filter_change?.counter !== prevProps.query.filter_change?.counter) {
       /* Trigger update of features style */
-      for (let i = _PREV; i < _COUNTER; i++) {
-        window[`__jps${i}`] = nope;
-      }
-      _PREV = _COUNTER;
-      _REQS = 0;
-      this.layerSites.current.getSource().refresh();
-      this.layerSites.current.changed();
-      this.layerRegions.current.changed();
+      debounce(
+        () => {
+          for (let i = _PREV; i < _COUNTER; i++) {
+            window[`__jps${i}`] = nope;
+          }
+          _PREV = _COUNTER;
+          _REQS = 0;
+          this.layerSites.current.getSource().refresh();
+          this.layerSites.current.changed();
+          this.layerRegions.current.changed();
+        },
+        1,
+        500,
+      );
       /* Fit view if necessary */
       if (filter_change.type === 'search-location') {
         getLocationExtent(filter_search).then(({ data }) => {
@@ -409,7 +415,7 @@ class View extends React.PureComponent {
           },
         });
       }
-    });
+    }, 0);
     if (hit) {
       this.overlayPopup.current.setPosition(e.coordinate);
       e.map.getTarget().style.cursor = 'pointer';
