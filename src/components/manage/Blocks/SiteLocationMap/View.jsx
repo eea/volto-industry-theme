@@ -20,7 +20,7 @@ const View = (props) => {
   const dataprotection = {
     enabled: true,
     privacy_statement:
-      'This map is hosted by a third party [Environmental Systems Research Institute, INC: "ESRI"]. By showing th external content you accept the terms and conditions of www.esri.com. This includes their cookie policies, which e have no control over.',
+      'This map is hosted by a third party [Environmental Systems Research Institute, INC: "ESRI"]. By showing the external content you accept the terms and conditions of www.esri.com. This includes their cookie policies, which we have no control over.',
     privacy_cookie_key: 'site-location-map',
     placeholder_image: mapPlaceholder,
     type: 'small',
