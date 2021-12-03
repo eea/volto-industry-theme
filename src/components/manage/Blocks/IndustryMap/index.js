@@ -83,7 +83,7 @@ export const getStyles = (style) => {
   });
   obj.regionCircle = new style.Style({
     image: new style.Circle({
-      radius: 6,
+      radius: 4,
       fill: new style.Fill({ color: '#4296B2' }),
       stroke: new style.Stroke({ color: '#6A6A6A', width: 1 }),
       zIndex: 0,
@@ -134,7 +134,7 @@ const getLatestRegions = (query) => {
 };
 
 export const getLayerSitesURL = (extent) => {
-  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/FeatureServer/0/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=${encodeURIComponent(
+  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer/0/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=${encodeURIComponent(
     '{"xmin":' +
       extent[0] +
       ',"ymin":' +
