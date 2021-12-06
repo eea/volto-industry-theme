@@ -21,7 +21,7 @@ import {
   dataprotection,
   getStyles,
   getLayerSitesURL,
-  getLayerRegionsURL,
+  // getLayerRegionsURL,
   getLayerBaseURL,
   getLocationExtent,
   getSiteExtent,
@@ -37,8 +37,8 @@ import navigationSVG from '@plone/volto/icons/navigation.svg';
 
 import './styles.less';
 
-let _REQS = 0;
-const zoomSwitch = 6;
+// let _REQS = 0;
+// const zoomSwitch = 6;
 let timer = [];
 
 const debounce = (func, index, timeout = 200, ...args) => {
@@ -48,14 +48,15 @@ const debounce = (func, index, timeout = 200, ...args) => {
 
 const getSitesSource = (self) => {
   const { source } = openlayers;
-  return  new source.TileArcGISRest({
-      params: {
-        layerDefs: JSON.stringify({
-          0: getWhereStatement(self.props.query)
-        })
-      },
-      url: 'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
-    })
+  return new source.TileArcGISRest({
+    params: {
+      layerDefs: JSON.stringify({
+        0: getWhereStatement(self.props.query),
+      }),
+    },
+    url:
+      'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
+  });
 };
 class View extends React.PureComponent {
   /**
@@ -118,8 +119,8 @@ class View extends React.PureComponent {
         () => {
           this.layerSites.current.getSource().updateParams({
             layerDefs: JSON.stringify({
-              0: getWhereStatement(this.props.query)
-            })
+              0: getWhereStatement(this.props.query),
+            }),
           });
           // this.layerRegions.current.changed();
         },
@@ -301,57 +302,61 @@ class View extends React.PureComponent {
       e.coordinate[0] - 3 * resolution,
       e.coordinate[1] - 3 * resolution,
       e.coordinate[0] + 3 * resolution,
-      e.coordinate[1] + 3 * resolution
-    ]
-    debounce(() => {
-      const esrijsonFormat = new openlayers.format.EsriJSON();
-      const where = getWhereStatement(this.props.query);
-      jsonp(
-        getLayerSitesURL(pointerExtent),
-        {
-          prefix: '__jps',
-          param:
-            (where
-              ? qs.stringify({
-                  where,
-                })
-              : '')  + '&callback',
-        },
-        (error, response) => {
-          if (!error) {
-            let features = esrijsonFormat.readFeatures(response);
-            if (!features[0]) {
-              this.overlayPopup.current.setPosition(undefined);
+      e.coordinate[1] + 3 * resolution,
+    ];
+    debounce(
+      () => {
+        const esrijsonFormat = new openlayers.format.EsriJSON();
+        const where = getWhereStatement(this.props.query);
+        jsonp(
+          getLayerSitesURL(pointerExtent),
+          {
+            prefix: '__jps',
+            param:
+              (where
+                ? qs.stringify({
+                    where,
+                  })
+                : '') + '&callback',
+          },
+          (error, response) => {
+            if (!error) {
+              let features = esrijsonFormat.readFeatures(response);
+              if (!features[0]) {
+                this.overlayPopup.current.setPosition(undefined);
+                emitEvent(mapElement, 'ol-pointermove', {
+                  bubbles: false,
+                  detail: {},
+                });
+                return;
+              }
+              let hdms = coordinate.toStringHDMS(
+                proj.toLonLat(features[0].getGeometry().flatCoordinates),
+              );
+              const featuresProperties = features[0].getProperties();
               emitEvent(mapElement, 'ol-pointermove', {
                 bubbles: false,
-                detail: {},
+                detail: {
+                  ...featuresProperties,
+                  hdms,
+                  flatCoordinates: features[0].getGeometry().flatCoordinates,
+                },
               });
-              return;
+              this.overlayPopup.current.setPosition(e.coordinate);
+              e.map.getTarget().style.cursor = 'pointer';
             }
-            let hdms = coordinate.toStringHDMS(
-              proj.toLonLat(features[0].getGeometry().flatCoordinates),
-            );
-            const featuresProperties = features[0].getProperties();
-            emitEvent(mapElement, 'ol-pointermove', {
-              bubbles: false,
-              detail: {
-                ...featuresProperties,
-                hdms,
-                flatCoordinates: features[0].getGeometry().flatCoordinates,
-              },
-            });
-            this.overlayPopup.current.setPosition(e.coordinate);
-            e.map.getTarget().style.cursor = 'pointer';
-          }
-        }
-      )
-    }, 0, 250);
+          },
+        );
+      },
+      0,
+      250,
+    );
     this.overlayPopup.current.setPosition(undefined);
     e.map.getTarget().style.cursor = '';
   }
 
   onClick(e) {
-    const zoom = e.map.getView().getZoom();
+    // const zoom = e.map.getView().getZoom();
     if (
       __SERVER__ ||
       // (zoom < zoomSwitch && !window['__where']) ||
@@ -369,18 +374,18 @@ class View extends React.PureComponent {
       e.coordinate[0] - 3 * resolution,
       e.coordinate[1] - 3 * resolution,
       e.coordinate[0] + 3 * resolution,
-      e.coordinate[1] + 3 * resolution
-    ]
+      e.coordinate[1] + 3 * resolution,
+    ];
     jsonp(
       getLayerSitesURL(pointerExtent),
       {
         prefix: '__jps',
         param:
-            (where
-              ? qs.stringify({
-                  where,
-                })
-              : '')  + '&callback',
+          (where
+            ? qs.stringify({
+                where,
+              })
+            : '') + '&callback',
       },
       (error, response) => {
         if (!error) {
@@ -408,8 +413,8 @@ class View extends React.PureComponent {
             },
           });
         }
-      }
-    )
+      },
+    );
   }
 
   onMoveend(e) {
@@ -421,7 +426,7 @@ class View extends React.PureComponent {
   }
 
   render() {
-    const { format, loadingstrategy, proj, source, tilegrid } = openlayers;
+    const { proj, source } = openlayers;
     if (__SERVER__) return '';
     return (
       <div className="industry-map-wrapper">
