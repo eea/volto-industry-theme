@@ -21,7 +21,7 @@ import {
   dataprotection,
   getStyles,
   getLayerSitesURL,
-  getLayerRegionsURL,
+  // getLayerRegionsURL,
   getLayerBaseURL,
   getLocationExtent,
   getSiteExtent,
@@ -37,13 +37,9 @@ import navigationSVG from '@plone/volto/icons/navigation.svg';
 
 import './styles.less';
 
-let _REQS = 0;
-let _COUNTER = 0;
-let _PREV = 0;
-const zoomSwitch = 6;
+// let _REQS = 0;
+// const zoomSwitch = 6;
 let timer = [];
-
-function nope() {}
 
 const debounce = (func, index, timeout = 200, ...args) => {
   if (timer[index]) clearTimeout(timer[index]);
@@ -51,96 +47,15 @@ const debounce = (func, index, timeout = 200, ...args) => {
 };
 
 const getSitesSource = (self) => {
-  const { format, source, tilegrid } = openlayers;
-  return new source.Vector({
-    loader: function (extent, resolution, projection) {
-      _REQS++;
-      _COUNTER++;
-      const mapElement = document.querySelector('#industry-map');
-      const esrijsonFormat = new format.EsriJSON();
-      this.resolution = resolution;
-      const where = getWhereStatement(self.props.query);
-      const url = getLayerSitesURL(extent);
-      jsonp(
-        url,
-        {
-          prefix: '__jps',
-          param:
-            (where
-              ? qs.stringify({
-                  where,
-                })
-              : '') + '&callback',
-        },
-        (error, response) => {
-          if (window['__where'] !== where) return;
-          if (!error) {
-            let features = esrijsonFormat.readFeatures(response, {
-              featureProjection: projection,
-            });
-            if (features?.length > 0) {
-              this.addFeatures(features);
-            }
-          }
-          if (!--_REQS) {
-            this.dispatchEvent('load');
-            emitEvent(mapElement, 'ol-features-load', {
-              bubbles: false,
-              detail: {
-                loaded: true,
-              },
-            });
-          }
-        },
-      );
-      emitEvent(mapElement, 'ol-features-load', {
-        bubbles: false,
-        detail: {
-          loaded: false,
-        },
-      });
+  const { source } = openlayers;
+  return new source.TileArcGISRest({
+    params: {
+      layerDefs: JSON.stringify({
+        0: getWhereStatement(self.props.query),
+      }),
     },
-    strategy: function (extent, resolution) {
-      const tileGrid = tilegrid.createXYZ({
-        tileSize: 256,
-      });
-      let z = tileGrid.getZForResolution(resolution);
-      let tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
-      /** @type {Array<import("./extent.js").Extent>} */
-      let extents = [];
-      /** @type {import("./tilecoord.js").TileCoord} */
-      let tileCoord = [z, 0, 0];
-      for (
-        tileCoord[1] = tileRange.minX;
-        tileCoord[1] <= tileRange.maxX;
-        ++tileCoord[1]
-      ) {
-        for (
-          tileCoord[2] = tileRange.minY;
-          tileCoord[2] <= tileRange.maxY;
-          ++tileCoord[2]
-        ) {
-          extents.push(tileGrid.getTileCoordExtent(tileCoord));
-        }
-      }
-      if (this.resolution && this.resolution !== resolution) {
-        extents.forEach((newExtent) => {
-          this.loadedExtentsRtree_.forEach((loadedExtent) => {
-            const bigExtent = loadedExtent.extent;
-            if (
-              openlayers.extent.containsExtent(bigExtent, newExtent) &&
-              bigExtent[0] !== newExtent[0] &&
-              bigExtent[1] !== newExtent[1] &&
-              bigExtent[2] !== newExtent[2] &&
-              bigExtent[3] !== newExtent[3]
-            ) {
-              this.loadedExtentsRtree_.remove(loadedExtent);
-            }
-          });
-        });
-      }
-      return extents;
-    },
+    url:
+      'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
   });
 };
 class View extends React.PureComponent {
@@ -181,19 +96,9 @@ class View extends React.PureComponent {
 
   componentDidMount() {
     window['__where'] = getWhereStatement(this.props.query);
-    window['__sitename'] =
-      this.props.query.filter_search?.type === 'site'
-        ? this.props.filter_search.text
-        : null;
-    document
-      .querySelector('#industry-map')
-      .addEventListener('ol-features-load', this.onFeatureLoad);
   }
 
   componentWillUnmount() {
-    document
-      .querySelector('#industry-map')
-      .removeEventListener('ol-features-load', this.onFeatureLoad);
     this.setState({ mapRendered: false });
   }
 
@@ -202,8 +107,6 @@ class View extends React.PureComponent {
     const { extent, proj } = openlayers;
     const { filter_change, filter_search } = this.props.query;
     window['__where'] = getWhereStatement(this.props.query);
-    window['__sitename'] =
-      filter_search?.type === 'site' ? filter_search.text : null;
     const filter_countries = (this.props.query.filter_countries || []).filter(
       (value) => value,
     );
@@ -214,14 +117,12 @@ class View extends React.PureComponent {
       /* Trigger update of features style */
       debounce(
         () => {
-          for (let i = _PREV; i < _COUNTER; i++) {
-            window[`__jps${i}`] = nope;
-          }
-          _PREV = _COUNTER;
-          _REQS = 0;
-          this.layerSites.current.getSource().refresh();
-          this.layerSites.current.changed();
-          this.layerRegions.current.changed();
+          this.layerSites.current.getSource().updateParams({
+            layerDefs: JSON.stringify({
+              0: getWhereStatement(this.props.query),
+            }),
+          });
+          // this.layerRegions.current.changed();
         },
         1,
         500,
@@ -381,7 +282,7 @@ class View extends React.PureComponent {
   onPointermove(e) {
     if (__SERVER__ || !this.overlayPopup.current) return;
     if (e.dragging) {
-      e.map.getTarget().style.cursor = 'grabbing';
+      // e.map.getTarget().style.cursor = 'grabbing';
       return;
     }
     if (
@@ -396,75 +297,124 @@ class View extends React.PureComponent {
     }
     const { coordinate, proj } = openlayers;
     const mapElement = document.querySelector('#industry-map');
-    const pixel = e.map.getEventPixel(e.originalEvent);
-    const hit = e.map.hasFeatureAtPixel(pixel);
-    debounce(() => {
-      if (hit) {
-        const features = e.map.getFeaturesAtPixel(pixel);
-        if (!features[0]) return;
-        let hdms = coordinate.toStringHDMS(
-          proj.toLonLat(features[0].getGeometry().flatCoordinates),
-        );
-        const featuresProperties = features[0].getProperties();
-        emitEvent(mapElement, 'ol-pointermove', {
-          bubbles: false,
-          detail: {
-            ...featuresProperties,
-            hdms,
-            flatCoordinates: features[0].getGeometry().flatCoordinates,
+    const resolution = e.map.getView().getResolution();
+    const pointerExtent = [
+      e.coordinate[0] - 3 * resolution,
+      e.coordinate[1] - 3 * resolution,
+      e.coordinate[0] + 3 * resolution,
+      e.coordinate[1] + 3 * resolution,
+    ];
+    debounce(
+      () => {
+        const esrijsonFormat = new openlayers.format.EsriJSON();
+        const where = getWhereStatement(this.props.query);
+        jsonp(
+          getLayerSitesURL(pointerExtent),
+          {
+            prefix: '__jps',
+            param:
+              (where
+                ? qs.stringify({
+                    where,
+                  })
+                : '') + '&callback',
           },
-        });
-      }
-    }, 0);
-    if (hit) {
-      this.overlayPopup.current.setPosition(e.coordinate);
-      e.map.getTarget().style.cursor = 'pointer';
-    } else {
-      this.overlayPopup.current.setPosition(undefined);
-      e.map.getTarget().style.cursor = 'grab';
-      emitEvent(mapElement, 'ol-pointermove', {
-        bubbles: false,
-        detail: {},
-      });
-    }
+          (error, response) => {
+            if (!error) {
+              let features = esrijsonFormat.readFeatures(response);
+              if (!features[0]) {
+                this.overlayPopup.current.setPosition(undefined);
+                emitEvent(mapElement, 'ol-pointermove', {
+                  bubbles: false,
+                  detail: {},
+                });
+                return;
+              }
+              let hdms = coordinate.toStringHDMS(
+                proj.toLonLat(features[0].getGeometry().flatCoordinates),
+              );
+              const featuresProperties = features[0].getProperties();
+              emitEvent(mapElement, 'ol-pointermove', {
+                bubbles: false,
+                detail: {
+                  ...featuresProperties,
+                  hdms,
+                  flatCoordinates: features[0].getGeometry().flatCoordinates,
+                },
+              });
+              this.overlayPopup.current.setPosition(e.coordinate);
+              e.map.getTarget().style.cursor = 'pointer';
+            }
+          },
+        );
+      },
+      0,
+      250,
+    );
+    this.overlayPopup.current.setPosition(undefined);
+    e.map.getTarget().style.cursor = '';
   }
 
   onClick(e) {
-    const zoom = e.map.getView().getZoom();
+    // const zoom = e.map.getView().getZoom();
     if (
       __SERVER__ ||
-      (zoom < zoomSwitch && !window['__where']) ||
+      // (zoom < zoomSwitch && !window['__where']) ||
       !this.overlayPopup.current ||
       !this.overlayPopupDetailed.current
     ) {
       return;
     }
-    const { coordinate, proj } = openlayers;
+    const { coordinate, proj, format } = openlayers;
+    const esrijsonFormat = new format.EsriJSON();
+    const where = getWhereStatement(this.props.query);
     const mapElement = document.querySelector('#industry-map');
-    const pixel = e.map.getEventPixel(e.originalEvent);
-    const features = this.getFeatureInRange(e.map, pixel, 9);
-    if (features?.length) {
-      let hdms = coordinate.toStringHDMS(
-        proj.toLonLat(features[0].getGeometry().flatCoordinates),
-      );
-      const featuresProperties = features[0].getProperties();
-      e.map.getTarget().style.cursor = '';
-      this.overlayPopup.current.setPosition(undefined);
-      this.overlayPopupDetailed.current.setPosition(e.coordinate);
-      emitEvent(mapElement, 'ol-click', {
-        bubbles: false,
-        detail: {
-          ...featuresProperties,
-          hdms,
-          flatCoordinates: features[0].getGeometry().flatCoordinates,
-        },
-      });
-    } else {
-      emitEvent(mapElement, 'ol-click', {
-        bubbles: false,
-        detail: {},
-      });
-    }
+    const resolution = e.map.getView().getResolution();
+    const pointerExtent = [
+      e.coordinate[0] - 3 * resolution,
+      e.coordinate[1] - 3 * resolution,
+      e.coordinate[0] + 3 * resolution,
+      e.coordinate[1] + 3 * resolution,
+    ];
+    jsonp(
+      getLayerSitesURL(pointerExtent),
+      {
+        prefix: '__jps',
+        param:
+          (where
+            ? qs.stringify({
+                where,
+              })
+            : '') + '&callback',
+      },
+      (error, response) => {
+        if (!error) {
+          let features = esrijsonFormat.readFeatures(response);
+          if (!features[0]) {
+            emitEvent(mapElement, 'ol-click', {
+              bubbles: false,
+              detail: {},
+            });
+            return;
+          }
+          let hdms = coordinate.toStringHDMS(
+            proj.toLonLat(features[0].getGeometry().flatCoordinates),
+          );
+          const featuresProperties = features[0].getProperties();
+          e.map.getTarget().style.cursor = '';
+          this.overlayPopup.current.setPosition(undefined);
+          this.overlayPopupDetailed.current.setPosition(e.coordinate);
+          emitEvent(mapElement, 'ol-click', {
+            bubbles: false,
+            detail: {
+              ...featuresProperties,
+              hdms,
+              flatCoordinates: features[0].getGeometry().flatCoordinates,
+            },
+          });
+        }
+      },
+    );
   }
 
   onMoveend(e) {
@@ -476,7 +426,7 @@ class View extends React.PureComponent {
   }
 
   render() {
-    const { format, loadingstrategy, proj, source, tilegrid } = openlayers;
+    const { proj, source } = openlayers;
     if (__SERVER__) return '';
     return (
       <div className="industry-map-wrapper">
@@ -492,9 +442,9 @@ class View extends React.PureComponent {
               view={{
                 center: proj.fromLonLat([20, 50]),
                 showFullExtent: true,
-                maxZoom: 16,
-                minZoom: 2,
-                zoom: 2,
+                // maxZoom: 1,
+                minZoom: 1,
+                zoom: 1,
               }}
               renderer="webgl"
               onPointermove={this.onPointermove}
@@ -530,7 +480,7 @@ class View extends React.PureComponent {
                   }
                   zIndex={0}
                 />
-                <Layer.VectorImage
+                {/* <Layer.VectorImage
                   className="ol-layer-regions"
                   ref={(data) => {
                     this.layerRegions.current = data?.layer;
@@ -569,27 +519,13 @@ class View extends React.PureComponent {
                   }}
                   title="1.Regions"
                   zIndex={1}
-                />
-                <Layer.VectorImage
+                /> */}
+                <Layer.Tile
                   ref={(data) => {
                     this.layerSites.current = data?.layer;
                   }}
                   className="ol-layer-sites"
                   source={getSitesSource(this)}
-                  style={() => {
-                    if (!this.map.current) return;
-                    const zoom = this.map.current.getView().getZoom();
-                    if (zoom < zoomSwitch && !window['__where']) return;
-                    const style =
-                      zoom >= 8
-                        ? window['__sitename']
-                          ? this.styles.bigGreenCircle
-                          : this.styles.bigCircle
-                        : window['__sitename']
-                        ? this.styles.smallGreenCircle
-                        : this.styles.smallCircle;
-                    return style;
-                  }}
                   title="2.Sites"
                   zIndex={1}
                 />
@@ -651,3 +587,6 @@ export default compose(
     },
   ),
 )(View);
+
+// "xmin":2776424.091605701,"ymin":6070469.719410612,"xmax":2776624.091605701,"ymax":6070669.719410612
+// "xmin":2776140.185042828,"ymin":6070787.13687411,"xmax":2776340.185042828,"ymax":6070987.13687411

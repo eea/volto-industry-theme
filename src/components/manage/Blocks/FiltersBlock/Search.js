@@ -159,6 +159,7 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
         loading={loading}
         value={value}
         aria-label="Site search"
+        autocomplete="off"
         icon={
           <>
             {!loading && value ? (
