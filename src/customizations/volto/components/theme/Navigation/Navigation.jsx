@@ -235,6 +235,7 @@ class Navigation extends Component {
                       ? item.url === `/${lang}`
                       : item.url === ''
                   }
+                  onClick={() => this.setState({ isMobileMenuOpen: false })}
                 >
                   {item.title}
                 </NavLink>

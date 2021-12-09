@@ -1,3 +1,6 @@
 /*******************************
          Theme Overrides
 *******************************/
+.ui.basic.segment.content-area {
+  min-height: 500px;
+}

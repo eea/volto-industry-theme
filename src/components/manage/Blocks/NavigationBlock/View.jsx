@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
+import cx from 'classnames';
 import { Container, Menu, Dropdown } from 'semantic-ui-react';
 import { UniversalLink } from '@plone/volto/components';
 import { getBaseUrl } from '@plone/volto/helpers';
@@ -24,9 +25,10 @@ function toggleItem(container, item, hidden) {
 }
 
 const MenuWrapper = ({ children, data, className }) => {
-  return (
-    <Container fluid={data.styles?.align === 'full'}>{children}</Container>
-  );
+  if (data.styles?.align === 'full') {
+    return <Container className="menu-wrapper">{children}</Container>;
+  }
+  return <div className="menu-wrapper">{children}</div>;
 };
 
 const View = ({ location, data, navigation, screen }) => {
@@ -63,7 +65,12 @@ const View = ({ location, data, navigation, screen }) => {
   }, [screen, data.isResponsive]);
 
   return (
-    <div className="navigation-block" ref={nav}>
+    <div
+      className={cx('navigation-block', {
+        'with-container': data.styles?.align === 'full',
+      })}
+      ref={nav}
+    >
       <MenuWrapper data={data}>
         <Menu>
           {items.map((item, index) => (
