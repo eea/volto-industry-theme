@@ -1,7 +1,9 @@
-export const getOptions = (data) => {
+export const getOptions = (data, appendNoValue = true) => {
   if (!data || !data.opt_key || !data.opt_value || !data.opt_text) return [];
   return [
-    { key: 'no-value', value: null, text: 'No value' },
+    ...(appendNoValue
+      ? [{ key: 'no-value', value: null, text: 'No value' }]
+      : []),
     ...data.opt_key.map((_, index) => ({
       key: data.opt_id?.[index]
         ? `${data.opt_key[index]} - ${data.opt_id[index]}`

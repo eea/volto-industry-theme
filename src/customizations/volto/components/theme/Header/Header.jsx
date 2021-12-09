@@ -55,7 +55,7 @@ class Header extends Component {
             <div className="logo-nav-wrapper">
               <div className="logo">
                 <Logo />
-                <Parteners className="mobile tablet only" />
+                {/* <Parteners className="mobile tablet only" /> */}
               </div>
               <Navigation pathname={this.props.pathname} />
             </div>

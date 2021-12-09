@@ -18,6 +18,7 @@ class View extends React.Component {
     this.updateOptions = this.updateOptions.bind(this);
     this.state = {
       open: false,
+      filtersInitialized: false,
       options: {},
     };
   }
@@ -36,6 +37,7 @@ class View extends React.Component {
       }
     }
     dispatch(setQuery(filters));
+    this.setState({ filtersInitialized: true });
     return true;
   }
 
@@ -55,7 +57,19 @@ class View extends React.Component {
       if (!newOptions['permit_types']) {
         newOptions['permit_types'] = permitTypes;
       }
-      this.setState({ options: newOptions });
+      this.setState({ options: newOptions }, () => {
+        if (
+          !this.state.filtersInitialized &&
+          newOptions.reporting_years?.length
+        ) {
+          const latestYear = newOptions.reporting_years
+            .filter((opt) => opt.value)
+            .sort((a, b) => b.value - a.value)[0].value;
+          this.setInitialFilters({
+            filter_reporting_years: [latestYear],
+          });
+        }
+      });
     }
   }
 
@@ -68,7 +82,6 @@ class View extends React.Component {
   }
 
   componentDidMount() {
-    this.setInitialFilters({ filter_reporting_years: [2019] });
     this.updateOptions();
   }
 

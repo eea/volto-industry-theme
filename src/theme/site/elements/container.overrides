@@ -6,8 +6,8 @@
 body {
   &.with-scrollbar {
     .full-width {
-      left: calc(50% + @customScrollbarWidth / 2) !important;
-      width: calc(100vw - @customScrollbarWidth) !important;
+      // left: calc(50% + @customScrollbarWidth / 2) !important;
+      // width: calc(100vw - @customScrollbarWidth) !important;
 
       &.padded {
         padding-right: 0;

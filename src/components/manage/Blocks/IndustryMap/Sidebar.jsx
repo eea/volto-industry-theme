@@ -125,7 +125,10 @@ class Sidebar extends React.Component {
           !newOptions[source.name] &&
           providers_data[source.name]
         ) {
-          newOptions[source.name] = getOptions(providers_data[source.name]);
+          newOptions[source.name] = getOptions(
+            providers_data[source.name],
+            false,
+          );
         }
       });
       this.setState({ options: newOptions });

@@ -58,6 +58,31 @@ const getSitesSource = (self) => {
       'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
   });
 };
+
+const getClosestFeatureToCoordinate = (coordinate, features) => {
+  if (!features.length) return null;
+  const x = coordinate[0];
+  const y = coordinate[1];
+  let closestFeature = null;
+  const closestPoint = [NaN, NaN];
+  let minSquaredDistance = Infinity;
+  features.forEach((feature) => {
+    const geometry = feature.getGeometry();
+    const previousMinSquaredDistance = minSquaredDistance;
+    minSquaredDistance = geometry.closestPointXY(
+      x,
+      y,
+      closestPoint,
+      minSquaredDistance,
+    );
+    if (minSquaredDistance < previousMinSquaredDistance) {
+      closestFeature = feature;
+    }
+  });
+
+  return closestFeature;
+};
+
 class View extends React.PureComponent {
   /**
    * Property types.
@@ -299,10 +324,10 @@ class View extends React.PureComponent {
     const mapElement = document.querySelector('#industry-map');
     const resolution = e.map.getView().getResolution();
     const pointerExtent = [
-      e.coordinate[0] - 3 * resolution,
-      e.coordinate[1] - 3 * resolution,
-      e.coordinate[0] + 3 * resolution,
-      e.coordinate[1] + 3 * resolution,
+      e.coordinate[0] - 6 * resolution,
+      e.coordinate[1] - 6 * resolution,
+      e.coordinate[0] + 6 * resolution,
+      e.coordinate[1] + 6 * resolution,
     ];
     debounce(
       () => {
@@ -322,7 +347,11 @@ class View extends React.PureComponent {
           (error, response) => {
             if (!error) {
               let features = esrijsonFormat.readFeatures(response);
-              if (!features[0]) {
+              const feature = getClosestFeatureToCoordinate(
+                e.coordinate,
+                features,
+              );
+              if (!feature) {
                 this.overlayPopup.current.setPosition(undefined);
                 emitEvent(mapElement, 'ol-pointermove', {
                   bubbles: false,
@@ -331,15 +360,15 @@ class View extends React.PureComponent {
                 return;
               }
               let hdms = coordinate.toStringHDMS(
-                proj.toLonLat(features[0].getGeometry().flatCoordinates),
+                proj.toLonLat(feature.getGeometry().flatCoordinates),
               );
-              const featuresProperties = features[0].getProperties();
+              const featuresProperties = feature.getProperties();
               emitEvent(mapElement, 'ol-pointermove', {
                 bubbles: false,
                 detail: {
                   ...featuresProperties,
                   hdms,
-                  flatCoordinates: features[0].getGeometry().flatCoordinates,
+                  flatCoordinates: feature.getGeometry().flatCoordinates,
                 },
               });
               this.overlayPopup.current.setPosition(e.coordinate);
@@ -356,10 +385,9 @@ class View extends React.PureComponent {
   }
 
   onClick(e) {
-    // const zoom = e.map.getView().getZoom();
+    const zoom = e.map.getView().getZoom();
     if (
       __SERVER__ ||
-      // (zoom < zoomSwitch && !window['__where']) ||
       !this.overlayPopup.current ||
       !this.overlayPopupDetailed.current
     ) {
@@ -371,10 +399,10 @@ class View extends React.PureComponent {
     const mapElement = document.querySelector('#industry-map');
     const resolution = e.map.getView().getResolution();
     const pointerExtent = [
-      e.coordinate[0] - 3 * resolution,
-      e.coordinate[1] - 3 * resolution,
-      e.coordinate[0] + 3 * resolution,
-      e.coordinate[1] + 3 * resolution,
+      e.coordinate[0] - (zoom >= 8 ? 12 : 6) * resolution,
+      e.coordinate[1] - (zoom >= 8 ? 12 : 6) * resolution,
+      e.coordinate[0] + (zoom >= 8 ? 12 : 6) * resolution,
+      e.coordinate[1] + (zoom >= 8 ? 12 : 6) * resolution,
     ];
     jsonp(
       getLayerSitesURL(pointerExtent),
@@ -390,7 +418,8 @@ class View extends React.PureComponent {
       (error, response) => {
         if (!error) {
           let features = esrijsonFormat.readFeatures(response);
-          if (!features[0]) {
+          const feature = getClosestFeatureToCoordinate(e.coordinate, features);
+          if (!feature) {
             emitEvent(mapElement, 'ol-click', {
               bubbles: false,
               detail: {},
@@ -398,9 +427,9 @@ class View extends React.PureComponent {
             return;
           }
           let hdms = coordinate.toStringHDMS(
-            proj.toLonLat(features[0].getGeometry().flatCoordinates),
+            proj.toLonLat(feature.getGeometry().flatCoordinates),
           );
-          const featuresProperties = features[0].getProperties();
+          const featuresProperties = feature.getProperties();
           e.map.getTarget().style.cursor = '';
           this.overlayPopup.current.setPosition(undefined);
           this.overlayPopupDetailed.current.setPosition(e.coordinate);
@@ -409,7 +438,7 @@ class View extends React.PureComponent {
             detail: {
               ...featuresProperties,
               hdms,
-              flatCoordinates: features[0].getGeometry().flatCoordinates,
+              flatCoordinates: feature.getGeometry().flatCoordinates,
             },
           });
         }
@@ -587,6 +616,3 @@ export default compose(
     },
   ),
 )(View);
-
-// "xmin":2776424.091605701,"ymin":6070469.719410612,"xmax":2776624.091605701,"ymax":6070669.719410612
-// "xmin":2776140.185042828,"ymin":6070787.13687411,"xmax":2776340.185042828,"ymax":6070987.13687411

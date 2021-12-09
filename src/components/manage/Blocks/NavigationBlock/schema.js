@@ -25,7 +25,7 @@ export default {
     {
       id: 'default',
       title: 'Default',
-      fields: ['ignoreScroll', 'isExact', 'parent', 'pages'],
+      fields: ['ignoreScroll', 'isExact', 'isResponsive', 'parent', 'pages'],
     },
   ],
   properties: {
@@ -44,6 +44,10 @@ export default {
     },
     ignoreScroll: {
       title: 'Ignore scroll',
+      type: 'boolean',
+    },
+    isResponsive: {
+      title: 'Responsive',
       type: 'boolean',
     },
   },

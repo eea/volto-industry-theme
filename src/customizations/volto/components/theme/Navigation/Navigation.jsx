@@ -9,10 +9,11 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { NavLink } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Sidebar, Dimmer } from 'semantic-ui-react';
 import cx from 'classnames';
 import { getBaseUrl, hasApiExpander } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
+import { Parteners } from '@eeacms/volto-industry-theme/components';
 
 import { getNavigation } from '@plone/volto/actions';
 
@@ -161,12 +162,10 @@ class Navigation extends Component {
         </div>
         <Menu
           stackable
-          secondary
-          className={
-            this.state.isMobileMenuOpen
-              ? 'open'
-              : 'computer large screen widescreen only'
-          }
+          inverted
+          borderless
+          color="blue"
+          className={'computer large screen widescreen only'}
           onClick={this.closeMobileMenu}
         >
           {this.props.items
@@ -189,6 +188,66 @@ class Navigation extends Component {
               </NavLink>
             ))}
         </Menu>
+        <Sidebar
+          as={Menu}
+          className={'mobile tablet only'}
+          animation="overlay"
+          direction="right"
+          icon="labeled"
+          width="wide"
+          color="blue"
+          inverted
+          vertical
+          onHide={() => this.setState({ isMobileMenuOpen: false })}
+          visible={this.state.isMobileMenuOpen}
+        >
+          <div className="menu-wrapper">
+            <button
+              className={cx('hamburger hamburger--collapse is-active')}
+              aria-label={this.props.intl.formatMessage(
+                messages.closeMobileMenu,
+                {
+                  type: this.props.type,
+                },
+              )}
+              title={this.props.intl.formatMessage(messages.closeMobileMenu, {
+                type: this.props.type,
+              })}
+              type="button"
+              onClick={this.toggleMobileMenu}
+            >
+              <span className="hamburger-box">
+                <span className="hamburger-inner" />
+              </span>
+            </button>
+            {this.props.items
+              .filter(
+                (item) => !settings.excludeFromNavigation.includes(item.url),
+              )
+              .map((item) => (
+                <NavLink
+                  to={item.url === '' ? '/' : item.url}
+                  key={item.url}
+                  className="item"
+                  activeClassName="active"
+                  exact={
+                    settings.isMultilingual
+                      ? item.url === `/${lang}`
+                      : item.url === ''
+                  }
+                >
+                  {item.title}
+                </NavLink>
+              ))}
+          </div>
+          <Parteners />
+        </Sidebar>
+        <Dimmer
+          style={{ zIndex: 101 }}
+          className={cx('mobile tablet only', {
+            active: this.state.isMobileMenuOpen,
+          })}
+        />
       </nav>
     );
   }

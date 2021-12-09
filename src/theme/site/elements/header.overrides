@@ -20,20 +20,39 @@
         margin-top: 0;
 
         .item {
+          align-self: center;
           color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           text-transform: uppercase;
 
           &.active {
-            background: transparent;
-            color: rgba(255, 255, 255, 1);
+            background-color: transparent !important;
             font-weight: bold;
           }
 
           &:hover {
+            border-radius: 0.25rem;
             color: rgba(255, 255, 255, 1);
           }
         }
+      }
+
+      .ui.sidebar {
+        display: flex;
+        justify-content: space-between;
+
+        .menu-wrapper {
+          flex: 1;
+
+          .hamburger {
+            margin-bottom: 1rem;
+            margin-left: auto;
+          }
+        }
+      }
+
+      .ui.active.dimmer {
+        display: none !important;
       }
 
       .hamburger-inner,
@@ -59,12 +78,19 @@
       }
 
       .navigation {
+        display: flex;
+        align-items: center;
+
         .ui.stackable.menu {
           flex-direction: column;
 
           .item {
             width: 100% !important;
           }
+        }
+
+        .ui.active.dimmer {
+          display: flex !important;
         }
       }
     }
