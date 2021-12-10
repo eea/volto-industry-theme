@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Map from '@eeacms/volto-openlayers-map/Map';
 import { Interactions } from '@eeacms/volto-openlayers-map/Interactions';
@@ -9,11 +9,12 @@ import { getSiteLocationURL } from './index';
 import qs from 'querystring';
 import PrivacyProtection from '@eeacms/volto-industry-theme/components/PrivacyProtection';
 import mapPlaceholder from '@eeacms/volto-industry-theme/components/PrivacyProtection/map_placeholder_small.jpg';
-import './styles.css';
+import './styles.less';
 
 const View = (props) => {
+  const map = React.useRef();
   const [options, setOptions] = React.useState({});
-  const [vectorSource, setVectorSource] = useState(null);
+  const [vectorSource, setVectorSource] = React.useState(null);
   const { format, proj, source, style } = openlayers;
   const { siteInspireId } = props.query;
 
@@ -52,6 +53,12 @@ const View = (props) => {
     /* eslint-disable-next-line */
   }, [siteInspireId]);
 
+  React.useEffect(() => {
+    if (map.current) {
+      map.current.updateSize();
+    }
+  }, [props.screen]);
+
   if (__SERVER__ || !vectorSource) return '';
 
   const siteStyle = new style.Style({
@@ -75,6 +82,9 @@ const View = (props) => {
             zoom: 12,
           }}
           renderer="webgl"
+          ref={(data) => {
+            map.current = data?.map;
+          }}
           {...options}
         >
           <Layers>
@@ -116,4 +126,5 @@ export default connect((state) => ({
     ...qs.parse(state.router.location.search.replace('?', '')),
     ...(state.query.search || {}),
   },
+  screen: state.screen,
 }))(View);

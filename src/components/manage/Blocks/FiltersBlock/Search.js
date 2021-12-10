@@ -155,42 +155,44 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
 
   return (
     <div className="search-container" ref={searchContainer}>
-      <Input
-        loading={loading}
-        value={value}
-        aria-label="Site search"
-        autocomplete="off"
-        icon={
-          <>
-            {!loading && value ? (
+      <form autocomplete="off" name="Map search">
+        <Input
+          loading={loading}
+          value={value}
+          aria-label="Site search"
+          // autocomplete="off"
+          icon={
+            <>
+              {!loading && value ? (
+                <i
+                  aria-hidden
+                  className="delete icon"
+                  onClick={() => {
+                    search('', null);
+                    setShowResults(false);
+                  }}
+                />
+              ) : (
+                ''
+              )}
               <i
                 aria-hidden
-                className="delete icon"
+                className="search icon"
                 onClick={() => {
-                  search('', null);
-                  setShowResults(false);
+                  debounce(onChange, { value });
+                  setLoading(true);
                 }}
               />
-            ) : (
-              ''
-            )}
-            <i
-              aria-hidden
-              className="search icon"
-              onClick={() => {
-                debounce(onChange, { value });
-                setLoading(true);
-              }}
-            />
-          </>
-        }
-        placeholder="Search for country, region, city or a site name"
-        onChange={(_, data) => {
-          debounce(onChange, data);
-          setValue(data.value);
-          setLoading(true);
-        }}
-      />
+            </>
+          }
+          placeholder="Search for country, region, city or a site name"
+          onChange={(_, data) => {
+            debounce(onChange, data);
+            setValue(data.value);
+            setLoading(true);
+          }}
+        />
+      </form>
       {items.length && showResults && value.length >= 3 ? (
         <List>
           {items.map((item, index) => (

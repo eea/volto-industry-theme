@@ -8,6 +8,9 @@
 @shadowOffset: (@shadowDistance / 2);
 
 @borderRadius: 1.5em;
+@borderWidth: 1px;
+@border: @borderWidth solid @borderColor;
+@boxShadow: @subtleShadow;
 
 .outline-button {
   @textColor: var(--text-color, @darkBlue);
@@ -85,6 +88,10 @@
   margin-bottom: 0 !important;
 
   > .columns-view {
+    border: @border;
+    border-top: 0;
+    box-shadow: @boxShadow;
+
     > .ui.grid {
       > .column {
         padding-top: 0 !important;

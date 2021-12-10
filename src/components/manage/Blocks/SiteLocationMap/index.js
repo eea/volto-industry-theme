@@ -5,7 +5,7 @@ import SiteLocationMapView from './View';
 
 export const getSiteLocationURL = (siteInspireId) => {
   const condition = `(InspireSiteId LIKE '${getEncodedString(siteInspireId)}')`;
-  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/FeatureServer/0/query?f=json&where=${condition}&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=InspireSiteId&outSR=102100`;
+  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer/0/query?f=json&where=${condition}&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=InspireSiteId&outSR=102100`;
 };
 
 export default (config) => {

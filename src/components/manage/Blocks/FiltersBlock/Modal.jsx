@@ -230,102 +230,102 @@ const ModalView = ({
         />
       </Modal.Header>
       <Modal.Content>
-        <h3>Industry</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="industries"
-          placeholder="Select industry"
-          options={options.industries}
-          setInputs={setInputs}
-        />
-        <h3>Geographical specifics</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="countries"
-          placeholder="Select country"
-          options={options.countries}
-          setInputs={setInputs}
-          onChange={onCountriesChange}
-        />
-        <SelectWrapper
-          inputs={inputs}
-          name="nuts_1"
-          placeholder="Select NUTS 1"
-          options={nutsIOptions}
-          setInputs={setInputs}
-          onChange={onNutsIChange}
-        />
-        <SelectWrapper
-          inputs={inputs}
-          name="nuts_2"
-          placeholder="Select NUTS 2"
-          options={nutsIIOptions}
-          setInputs={setInputs}
-        />
-        <SelectWrapper
-          inputs={inputs}
-          name="river_basin_districts"
-          placeholder="Select riven basin district"
-          options={riverBasinDistrictsOptions}
-          setInputs={setInputs}
-        />
-        <h3>Pollutants</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="pollutant_groups"
-          placeholder="Select pollutant group"
-          options={options.pollutant_groups}
-          setInputs={setInputs}
-          onChange={onPollutantGroupsChange}
-        />
-        <SelectWrapper
-          inputs={inputs}
-          name="pollutants"
-          placeholder="Select pollutant"
-          options={pollutantsOptions}
-          setInputs={setInputs}
-        />
-        <h3>Reporting year</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="reporting_years"
-          placeholder="Select reporting year"
-          options={options.reporting_years}
-          setInputs={setInputs}
-        />
-        <h3>Combustion plant type</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="plant_types"
-          placeholder="Select plant type"
-          options={options.plant_types}
-          setInputs={setInputs}
-        />
-        <h3>BAT sonclusions</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="bat_conclusions"
-          placeholder="Select BAT conclusion"
-          options={options.bat_conclusions}
-          setInputs={setInputs}
-        />
-        <h3>Permit</h3>
-        <SelectWrapper
-          inputs={inputs}
-          name="permit_types"
-          placeholder="Select permit type"
-          options={permitTypes}
-          setInputs={setInputs}
-        />
-        <SelectWrapper
-          inputs={inputs}
-          name="permit_years"
-          placeholder="Select permit year"
-          options={options.permit_years}
-          setInputs={setInputs}
-        />
-        <h3>Facility type</h3>
-        <form autoComplete="filter_facility_types">
+        <form autoComplete="off" name="Map advanced filters">
+          <h3>Industry</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="industries"
+            placeholder="Select industry"
+            options={options.industries}
+            setInputs={setInputs}
+          />
+          <h3>Geographical specifics</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="countries"
+            placeholder="Select country"
+            options={options.countries}
+            setInputs={setInputs}
+            onChange={onCountriesChange}
+          />
+          <SelectWrapper
+            inputs={inputs}
+            name="nuts_1"
+            placeholder="Select NUTS 1"
+            options={nutsIOptions}
+            setInputs={setInputs}
+            onChange={onNutsIChange}
+          />
+          <SelectWrapper
+            inputs={inputs}
+            name="nuts_2"
+            placeholder="Select NUTS 2"
+            options={nutsIIOptions}
+            setInputs={setInputs}
+          />
+          <SelectWrapper
+            inputs={inputs}
+            name="river_basin_districts"
+            placeholder="Select riven basin district"
+            options={riverBasinDistrictsOptions}
+            setInputs={setInputs}
+          />
+          <h3>Pollutants</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="pollutant_groups"
+            placeholder="Select pollutant group"
+            options={options.pollutant_groups}
+            setInputs={setInputs}
+            onChange={onPollutantGroupsChange}
+          />
+          <SelectWrapper
+            inputs={inputs}
+            name="pollutants"
+            placeholder="Select pollutant"
+            options={pollutantsOptions}
+            setInputs={setInputs}
+          />
+          <h3>Reporting year</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="reporting_years"
+            placeholder="Select reporting year"
+            options={options.reporting_years}
+            setInputs={setInputs}
+          />
+          <h3>Combustion plant type</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="plant_types"
+            placeholder="Select plant type"
+            options={options.plant_types}
+            setInputs={setInputs}
+          />
+          <h3>BAT sonclusions</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="bat_conclusions"
+            placeholder="Select BAT conclusion"
+            options={options.bat_conclusions}
+            setInputs={setInputs}
+          />
+          <h3>Permit</h3>
+          <SelectWrapper
+            inputs={inputs}
+            name="permit_types"
+            placeholder="Select permit type"
+            options={permitTypes}
+            setInputs={setInputs}
+          />
+          <SelectWrapper
+            inputs={inputs}
+            name="permit_years"
+            placeholder="Select permit year"
+            options={options.permit_years}
+            setInputs={setInputs}
+          />
+          <h3>Facility type</h3>
           <Checkbox
             name="filter_facility_types"
             label="EPRTR"

@@ -153,61 +153,61 @@ class Sidebar extends React.Component {
     if (__SERVER__) return '';
     return (
       <div id="map-sidebar" className="outline-button">
-        <h2>
-          <span>Dynamic filters</span>{' '}
-          <i
-            aria-hidden
-            className="delete icon"
-            style={{ float: 'right', cursor: 'pointer' }}
-            onClick={() => {
-              this.setState({ open: false });
+        <form autoComplete="off" name="Map simple filters">
+          <h2>
+            <span>Dynamic filters</span>{' '}
+            <i
+              aria-hidden
+              className="delete icon"
+              style={{ float: 'right', cursor: 'pointer' }}
+              onClick={() => {
+                this.setState({ open: false });
+              }}
+            />
+          </h2>
+          <h3>Reporting year</h3>
+          <Dropdown
+            fluid
+            search
+            selection
+            multiple
+            upward={false}
+            onChange={(_, data) => {
+              this.setDropdownValue(data, 'filter_reporting_years');
             }}
+            options={options.reporting_years || noOptions}
+            placeholder={'Select reporting year'}
+            value={query.filter_reporting_years || []}
           />
-        </h2>
-        <h3>Reporting year</h3>
-        <Dropdown
-          fluid
-          search
-          selection
-          multiple
-          upward={false}
-          onChange={(_, data) => {
-            this.setDropdownValue(data, 'filter_reporting_years');
-          }}
-          options={options.reporting_years || noOptions}
-          placeholder={'Select reporting year'}
-          value={query.filter_reporting_years || []}
-        />
-        <h3>Country</h3>
-        <Dropdown
-          fluid
-          search
-          selection
-          multiple
-          upward={false}
-          onChange={(_, data) => {
-            this.setDropdownValue(data, 'filter_countries');
-          }}
-          options={options.countries || noOptions}
-          placeholder={'Select country'}
-          value={query.filter_countries || []}
-        />
-        <h3>Industry</h3>
-        <Dropdown
-          fluid
-          search
-          selection
-          multiple
-          upward={false}
-          onChange={(_, data) => {
-            this.setDropdownValue(data, 'filter_industries');
-          }}
-          options={options.industries || noOptions}
-          placeholder={'Select industry'}
-          value={query.filter_industries || []}
-        />
-        <h3>Facility type</h3>
-        <form autoComplete="filter_facility_types">
+          <h3>Country</h3>
+          <Dropdown
+            fluid
+            search
+            selection
+            multiple
+            upward={false}
+            onChange={(_, data) => {
+              this.setDropdownValue(data, 'filter_countries');
+            }}
+            options={options.countries || noOptions}
+            placeholder={'Select country'}
+            value={query.filter_countries || []}
+          />
+          <h3>Industry</h3>
+          <Dropdown
+            fluid
+            search
+            selection
+            multiple
+            upward={false}
+            onChange={(_, data) => {
+              this.setDropdownValue(data, 'filter_industries');
+            }}
+            options={options.industries || noOptions}
+            placeholder={'Select industry'}
+            value={query.filter_industries || []}
+          />
+          <h3>Facility type</h3>
           <Checkbox
             name="filter_facility_types"
             label="EPRTR"
@@ -221,10 +221,10 @@ class Sidebar extends React.Component {
             checked={this.isChecked('filter_facility_types', 'NONEPRTR')}
             onChange={this.setCheckboxValue}
           />
+          <button onClick={this.clearFilters} className="clear-button">
+            Clear filters
+          </button>
         </form>
-        <button onClick={this.clearFilters} className="clear-button">
-          Clear filters
-        </button>
         <Portal
           node={document.querySelector('.industry-map .ol-control.ol-custom')}
         >
