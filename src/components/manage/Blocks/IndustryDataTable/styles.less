@@ -3,6 +3,14 @@
 @type: extra;
 @element: custom;
 
+@borderWidth: 1px;
+@border: @borderWidth solid @borderColor;
+@boxShadow: @subtleShadow;
+
+.simple-data-table {
+  padding: 0 !important;
+}
+
 .industry-table {
   display: flex;
   min-height: 400px;
@@ -18,9 +26,10 @@
   }
 
   .ui.table {
-    border: none;
+    border: @border;
     border-collapse: separate;
     border-spacing: 0 4px;
+    box-shadow: @boxShadow;
     color: #323232;
 
     thead {
@@ -157,6 +166,7 @@
       th {
         padding: 0.78571429em 0;
         border: none;
+        background: transparent;
       }
     }
 
