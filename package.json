@@ -19,9 +19,7 @@
   "addons": [
     "@eeacms/volto-tableau",
     "@eeacms/volto-datablocks",
-    "@eeacms/volto-openlayers-map",
-    "@eeacms/volto-columns-block",
-    "@eeacms/volto-matomo"
+    "@eeacms/volto-openlayers-map"
   ],
   "dependencies": {
     "@cypress/code-coverage": "^3.9.5",
