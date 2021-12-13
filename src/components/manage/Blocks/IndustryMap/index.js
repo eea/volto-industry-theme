@@ -144,7 +144,7 @@ export const getLayerSitesURL = (extent) => {
       ',"ymax":' +
       extent[3] +
       ',"spatialReference":{"wkid":102100}}',
-  )}&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*&outSR=102100`;
+  )}&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*&outSR=102100&resultRecordCount=20`;
 };
 
 export const getLayerRegionsURL = (extent) => {

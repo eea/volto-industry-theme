@@ -31,8 +31,10 @@ pipeline {
       when {
         allOf {
           environment name: 'CHANGE_ID', value: ''
-          not { branch 'master' }
-          not { changelog '.*^Automated release [0-9\\.]+$' }
+          anyOf {
+           not { changelog '.*^Automated release [0-9\\.]+$' }
+           branch 'master'
+          }
         }
       }
       steps {
@@ -108,7 +110,10 @@ pipeline {
       when {
         allOf {
           environment name: 'CHANGE_ID', value: ''
-          not { changelog '.*^Automated release [0-9\\.]+$' }
+          anyOf {
+           not { changelog '.*^Automated release [0-9\\.]+$' }
+           branch 'master'
+          }
         }
       }
       steps {
@@ -159,19 +164,23 @@ pipeline {
 
     stage('Report to SonarQube') {
       when {
+        allOf{
           environment name: 'CHANGE_ID', value: ''
           anyOf {
             branch 'master'
-            branch 'develop'
+            allOf {
+              branch 'develop'
+              not { changelog '.*^Automated release [0-9\\.]+$' }
+            }
           }
-          not { changelog '.*^Automated release [0-9\\.]+$' }
+        }
       }
       steps {
         node(label: 'swarm') {
           script{
             checkout scm
             unstash "xunit-reports"
-            // unstash "cypress-coverage"
+            unstash "cypress-coverage"
             def scannerHome = tool 'SonarQubeScanner';
             def nodeJS = tool 'NodeJS11';
             withSonarQubeEnv('Sonarqube') {
