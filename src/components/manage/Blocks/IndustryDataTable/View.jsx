@@ -239,24 +239,24 @@ const View = (props) => {
                                   ''
                                 )}
 
-                                {countPlantypeCoWi ? (
+                                {countPlantypeWi ? (
                                   <p className="mb-0">
-                                    {`${countPlantypeCoWi} ${
-                                      countPlantypeCoWi === 1
-                                        ? 'Co-waste incinerator'
-                                        : 'Large combustion plants'
+                                    {`${countPlantypeWi} ${
+                                      countPlantypeWi === 1
+                                        ? 'Waste incinerator'
+                                        : 'Waste incinerators'
                                     }`}
                                   </p>
                                 ) : (
                                   ''
                                 )}
 
-                                {countPlantypeWi ? (
+                                {countPlantypeCoWi ? (
                                   <p className="mb-0">
-                                    {`${countPlantypeWi} ${
-                                      countPlantypeWi === 1
+                                    {`${countPlantypeCoWi} ${
+                                      countPlantypeCoWi === 1
                                         ? 'Co-waste incinerator'
-                                        : 'Co-waste incinerator'
+                                        : 'Co-waste incinerators'
                                     }`}
                                   </p>
                                 ) : (

@@ -140,7 +140,7 @@ const View = (props) => {
                 {siteHeader.count_plantType_coWI ? (
                   <p className="info">
                     {siteHeader.count_plantType_coWI} Co-waste incinerator
-                    {siteHeader.count_plantType_WI > 1 ? 's' : ''}
+                    {siteHeader.count_plantType_coWI > 1 ? 's' : ''}
                   </p>
                 ) : (
                   ''
