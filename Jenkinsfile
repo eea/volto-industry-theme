@@ -180,7 +180,7 @@ pipeline {
           script{
             checkout scm
             unstash "xunit-reports"
-            // unstash "cypress-coverage"
+            unstash "cypress-coverage"
             def scannerHome = tool 'SonarQubeScanner';
             def nodeJS = tool 'NodeJS11';
             withSonarQubeEnv('Sonarqube') {
