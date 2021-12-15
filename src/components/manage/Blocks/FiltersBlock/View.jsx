@@ -67,6 +67,10 @@ class View extends React.Component {
             .sort((a, b) => b.value - a.value)[0].value;
           this.setInitialFilters({
             filter_reporting_years: [latestYear],
+            filter_change: {
+              counter: 1,
+              type: 'simple-filter',
+            },
           });
         }
       });

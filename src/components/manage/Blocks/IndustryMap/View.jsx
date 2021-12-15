@@ -140,6 +140,7 @@ class View extends React.PureComponent {
     }
     if (filter_change?.counter !== prevProps.query.filter_change?.counter) {
       /* Trigger update of features style */
+      console.log('HERE');
       debounce(
         () => {
           this.layerSites.current.getSource().updateParams({
@@ -305,7 +306,8 @@ class View extends React.PureComponent {
   }
 
   onPointermove(e) {
-    if (__SERVER__ || !this.overlayPopup.current) return;
+    if (__SERVER__ || !this.overlayPopup.current || e.type !== 'pointermove')
+      return;
     if (e.dragging) {
       // e.map.getTarget().style.cursor = 'grabbing';
       return;
@@ -320,14 +322,15 @@ class View extends React.PureComponent {
       e.map.getTarget().style.cursor = '';
       return;
     }
+    const zoom = e.map.getView().getZoom();
     const { coordinate, proj } = openlayers;
     const mapElement = document.querySelector('#industry-map');
     const resolution = e.map.getView().getResolution();
     const pointerExtent = [
-      e.coordinate[0] - 6 * resolution,
-      e.coordinate[1] - 6 * resolution,
-      e.coordinate[0] + 6 * resolution,
-      e.coordinate[1] + 6 * resolution,
+      e.coordinate[0] - (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[1] - (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[0] + (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[1] + (zoom >= 8 ? 8 : 6) * resolution,
     ];
     debounce(
       () => {
@@ -399,10 +402,10 @@ class View extends React.PureComponent {
     const mapElement = document.querySelector('#industry-map');
     const resolution = e.map.getView().getResolution();
     const pointerExtent = [
-      e.coordinate[0] - (zoom >= 8 ? 12 : 6) * resolution,
-      e.coordinate[1] - (zoom >= 8 ? 12 : 6) * resolution,
-      e.coordinate[0] + (zoom >= 8 ? 12 : 6) * resolution,
-      e.coordinate[1] + (zoom >= 8 ? 12 : 6) * resolution,
+      e.coordinate[0] - (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[1] - (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[0] + (zoom >= 8 ? 8 : 6) * resolution,
+      e.coordinate[1] + (zoom >= 8 ? 8 : 6) * resolution,
     ];
     jsonp(
       getLayerSitesURL(pointerExtent),
