@@ -140,7 +140,6 @@ class View extends React.PureComponent {
     }
     if (filter_change?.counter !== prevProps.query.filter_change?.counter) {
       /* Trigger update of features style */
-      console.log('HERE');
       debounce(
         () => {
           this.layerSites.current.getSource().updateParams({
