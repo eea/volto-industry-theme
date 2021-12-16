@@ -500,7 +500,9 @@ class View extends React.PureComponent {
                 keyboardZoom={true}
                 mouseWheelZoom={true}
                 pointer={true}
-                select={true}
+                select={false}
+                pinchRotate={false}
+                altShiftDragRotate={false}
               />
               <Layers>
                 <Layer.Tile
