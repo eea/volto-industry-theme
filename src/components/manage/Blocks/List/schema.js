@@ -25,8 +25,6 @@ const getSchema = (props) => {
   const data = props.provider_data || {};
   const choices = Object.keys(data).map((key) => [key, key]);
 
-  console.log('HERE', props);
-
   return {
     title: 'List',
 
