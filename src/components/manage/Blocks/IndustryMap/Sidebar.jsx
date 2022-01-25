@@ -96,7 +96,7 @@ class Sidebar extends React.Component {
     });
   }
 
-  clearFilters() {
+  clearFilters(e) {
     const { query, dispatch } = this.props;
     const newInputs = {};
     inputsKeys.forEach((key) => {
@@ -113,6 +113,8 @@ class Sidebar extends React.Component {
         filter_search_value: '',
       }),
     );
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   updateOptions() {

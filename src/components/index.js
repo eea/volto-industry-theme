@@ -12,6 +12,7 @@ import Parteners from './Parteners';
 /*---  Custom views  ---*/
 import RedirectView from './theme/View/RedirectView';
 /*---  Common blocks  ---*/
+import installTitleBlock from './manage/Blocks/Title';
 import installNavigationBlock from './manage/Blocks/NavigationBlock';
 /*---  EPRTR specific blocks  ---*/
 import installEnvironmentalFacilityDetails from './manage/Blocks/SiteBlocks/EnvironmentalFacilityDetails';
@@ -79,6 +80,7 @@ const installEprtrSpecificBlocks = (config) => {
 export {
   Parteners,
   installCustomViews,
+  installTitleBlock,
   installNavigationBlock,
   installEprtrSpecificBlocks,
   installCustomConnectedBlocks,
