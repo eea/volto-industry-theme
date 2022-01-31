@@ -40,12 +40,13 @@ const View = (props) => {
             text: year,
           }))
       : [];
+    /* eslint-disable-next-line */
   }, [provider_data]);
 
   React.useEffect(() => {
     setSiteHeader(getSiteByYear(provider_data, siteReportingYear));
     /* eslint-disable-next-line */
-  }, [JSON.stringify(provider_data), siteReportingYear]);
+  }, [provider_data, siteReportingYear]);
 
   return props.mode === 'edit' ? (
     <p>Site header</p>
