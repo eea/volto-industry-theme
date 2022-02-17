@@ -93,7 +93,7 @@ const Footer = () => (
                 <p>
                   European Environment Agency (EEA)
                   <br />
-                  Kongens Nytrov 6
+                  Kongens Nytorv 6
                   <br />
                   1050 Copenhagen K
                   <br />
