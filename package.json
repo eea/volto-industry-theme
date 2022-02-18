@@ -19,6 +19,7 @@
   "addons": [
     "@eeacms/volto-tableau",
     "@eeacms/volto-datablocks",
+    "@eeacms/volto-embed",
     "@eeacms/volto-openlayers-map",
     "@eeacms/volto-columns-block",
     "@eeacms/volto-matomo"
@@ -27,11 +28,11 @@
     "@cypress/code-coverage": "^3.9.5",
     "@eeacms/volto-columns-block": "*",
     "@eeacms/volto-datablocks": "*",
+    "@eeacms/volto-embed": "*",
     "@eeacms/volto-matomo": "*",
     "@eeacms/volto-openlayers-map": "*",
     "@eeacms/volto-tableau": "*",
     "axios": "0.24.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "react-highlight-words": "0.17.0",
     "react-tooltip": "4.2.21",
     "tableau-api-js": "github:eea/tableau-api-js#1.1.1"
