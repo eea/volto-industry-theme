@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Tab, Dropdown, Table } from 'semantic-ui-react';
 import cx from 'classnames';
 import qs from 'querystring';
-import { connectBlockToMultipleProviders } from '@eeacms/volto-datablocks/hocs';
+import { connectToMultipleProvidersUnfiltered } from '@eeacms/volto-datablocks/hocs';
 import { setQuery, deleteQuery } from '@eeacms/volto-industry-theme/actions';
 import { getObjectByIndex } from '@eeacms/volto-industry-theme/helpers';
 import './styles.less';
@@ -320,7 +320,6 @@ const View = ({ providers_data, query, setQuery, ...props }) => {
 };
 
 export default compose(
-  connectBlockToMultipleProviders,
   connect(
     (state) => ({
       query: {
@@ -333,4 +332,7 @@ export default compose(
       deleteQuery,
     },
   ),
+  connectToMultipleProvidersUnfiltered((props) => ({
+    providers: props.data.providers,
+  })),
 )(View);

@@ -6,7 +6,7 @@ import qs from 'querystring';
 import { toast } from 'react-toastify';
 import { doesNodeContainClick } from 'semantic-ui-react/dist/commonjs/lib';
 import { Icon, Toast } from '@plone/volto/components';
-import { connectBlockToMultipleProviders } from '@eeacms/volto-datablocks/hocs';
+import { connectToMultipleProvidersUnfiltered } from '@eeacms/volto-datablocks/hocs';
 import { Map } from '@eeacms/volto-openlayers-map/Map';
 import { Interactions } from '@eeacms/volto-openlayers-map/Interactions';
 import { Overlays } from '@eeacms/volto-openlayers-map/Overlays';
@@ -500,7 +500,9 @@ class View extends React.PureComponent {
                 keyboardZoom={true}
                 mouseWheelZoom={true}
                 pointer={true}
-                select={true}
+                select={false}
+                pinchRotate={false}
+                altShiftDragRotate={false}
               />
               <Layers>
                 <Layer.Tile
@@ -605,7 +607,6 @@ class View extends React.PureComponent {
 }
 
 export default compose(
-  connectBlockToMultipleProviders,
   connect(
     (state) => ({
       query: {
@@ -617,4 +618,7 @@ export default compose(
       setQuery,
     },
   ),
+  connectToMultipleProvidersUnfiltered((props) => ({
+    providers: props.data.providers,
+  })),
 )(View);

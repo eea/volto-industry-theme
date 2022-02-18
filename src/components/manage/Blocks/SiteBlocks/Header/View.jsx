@@ -29,43 +29,24 @@ const View = (props) => {
   const query = { ...props.query };
   const siteReportingYear = parseInt(query.siteReportingYear || '');
 
-  const reportingYears = provider_data?.euregReportingYear?.length
-    ? provider_data.euregReportingYear
-        .filter((year) => year)
-        .sort()
-        .map((year) => ({
-          key: year,
-          value: year,
-          text: year,
-        }))
-    : [];
-
-  React.useEffect(() => {
-    if (
-      siteHeader?.siteName &&
-      siteReportingYear &&
-      (siteHeader.siteName !== props.query.siteTerm ||
-        siteReportingYear !== props.query.reportingYear?.[0])
-    ) {
-      props.setQuery({
-        queryParam: {
-          siteTerm: siteHeader.siteName,
-          reportingYear: [siteReportingYear],
-          ...(props.query.siteTerm
-            ? {
-                filtersCounter: (props.query['filtersCounter'] || 0) + 1,
-              }
-            : {}),
-        },
-      });
-    }
+  const reportingYears = React.useMemo(() => {
+    return provider_data?.euregReportingYear?.length
+      ? provider_data.euregReportingYear
+          .filter((year) => year)
+          .sort((a, b) => b - a)
+          .map((year) => ({
+            key: year,
+            value: year,
+            text: year,
+          }))
+      : [];
     /* eslint-disable-next-line */
-  }, [JSON.stringify(siteHeader)]);
+  }, [provider_data]);
 
   React.useEffect(() => {
     setSiteHeader(getSiteByYear(provider_data, siteReportingYear));
     /* eslint-disable-next-line */
-  }, [JSON.stringify(provider_data), siteReportingYear]);
+  }, [provider_data, siteReportingYear]);
 
   return props.mode === 'edit' ? (
     <p>Site header</p>
@@ -158,13 +139,13 @@ const View = (props) => {
                     selection
                     onChange={(event, data) => {
                       const newSite = getSiteByYear(provider_data, data.value);
+                      const newQuery = { ...props.query };
+                      newQuery.siteInspireId = newSite.siteInspireId;
+                      newQuery.siteName = newSite.siteName;
+                      newQuery.siteReportingYear = newSite.siteReportingYear;
                       props.history.push({
                         pathname: props.location.pathname,
-                        search: getQueryString({
-                          ...props.query,
-                          siteReportingYear: data.value,
-                          siteName: newSite.siteName,
-                        }),
+                        search: getQueryString(newQuery),
                         state: {
                           ignoreScrollBehavior: true,
                         },
@@ -192,7 +173,6 @@ export default compose(
     (state) => ({
       query: {
         ...qs.parse(state.router.location.search.replace('?', '')),
-        ...(state.query.search || {}),
       },
     }),
     { setQuery },

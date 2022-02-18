@@ -92,6 +92,10 @@
         .ui.active.dimmer {
           display: flex !important;
         }
+
+        .ui.sidebar {
+          width: 100%;
+        }
       }
     }
   }

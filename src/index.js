@@ -1,5 +1,6 @@
 import {
   installCustomViews,
+  installTitleBlock,
   installNavigationBlock,
   installEprtrSpecificBlocks,
   installCustomConnectedBlocks,
@@ -99,6 +100,7 @@ const applyConfig = (config) => {
 
   return [
     installCustomViews,
+    installTitleBlock,
     installNavigationBlock,
     installEprtrSpecificBlocks,
     installCustomConnectedBlocks,

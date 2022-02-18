@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { connectBlockToMultipleProviders } from '@eeacms/volto-datablocks/hocs';
+import { connectToMultipleProvidersUnfiltered } from '@eeacms/volto-datablocks/hocs';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
 import Search from './Search';
 import Modal from './Modal';
@@ -110,8 +110,10 @@ class View extends React.Component {
 }
 
 export default compose(
-  connectBlockToMultipleProviders,
   connect((state) => ({
     query: state.query.search,
+  })),
+  connectToMultipleProvidersUnfiltered((props) => ({
+    providers: props.data.providers,
   })),
 )(View);
