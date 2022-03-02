@@ -31,33 +31,37 @@ const View = (props) => {
       <h3 className="blue">{lcp.installationPartName}</h3>
       <Grid columns={12}>
         <Grid.Row>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Plant Type</p>
-            <p>{lcp.plantType || '-'}</p>
+            <p className="info">{lcp.plantType || '-'}</p>
           </Grid.Column>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Total rated thermal input</p>
-            <p>
+            <p className="info">
               {lcp.totalRatedThermalInput
                 ? lcp.totalRatedThermalInput
                 : 'unspecified'}
             </p>
           </Grid.Column>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Untreated municipal waste treate</p>
-            <p>{lcp.untreatedMunicipalWaste ? 'yes' : 'no'}</p>
+            <p className="info">{lcp.untreatedMunicipalWaste ? 'yes' : 'no'}</p>
           </Grid.Column>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Specific conditions apply?</p>
-            <p>{lcp.specificConditions ? lcp.specificConditions : 'no'}</p>
+            <p className="info">
+              {lcp.specificConditions ? lcp.specificConditions : 'no'}
+            </p>
           </Grid.Column>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Significant hazardous waste incinerated</p>
-            <p>{lcp.heatReleaseHazardousWaste ? 'yes' : 'no'}</p>
+            <p className="info">
+              {lcp.heatReleaseHazardousWaste ? 'yes' : 'no'}
+            </p>
           </Grid.Column>
-          <Grid.Column className="info" mobile={6}>
+          <Grid.Column mobile={6}>
             <p className="label">Nominal capacity</p>
-            <p>
+            <p className="info">
               {lcp.totalNominalCapacityAnyWaste
                 ? lcp.totalNominalCapacityAnyWaste
                 : 'unspecified'}
