@@ -25,7 +25,9 @@ const getSiteByYear = (provider_data, year) => {
 
 const View = (props) => {
   const [siteHeader, setSiteHeader] = React.useState({});
-  const { provider_data = {} } = props;
+  const provider_data = React.useMemo(() => props.provider_data || {}, [
+    props.provider_data,
+  ]);
   const query = { ...props.query };
   const siteReportingYear = parseInt(query.siteReportingYear || '');
 
@@ -46,7 +48,7 @@ const View = (props) => {
   React.useEffect(() => {
     setSiteHeader(getSiteByYear(provider_data, siteReportingYear));
     /* eslint-disable-next-line */
-  }, [provider_data, siteReportingYear]);
+  }, [provider_data]);
 
   return props.mode === 'edit' ? (
     <p>Site header</p>

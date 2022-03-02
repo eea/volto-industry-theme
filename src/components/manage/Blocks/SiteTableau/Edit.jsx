@@ -9,7 +9,10 @@ import getSchema from './schema';
 import View from './View';
 
 const Edit = (props) => {
-  const { provider_data = null, data = {} } = props;
+  const provider_data = React.useMemo(() => props.provider_data || {}, [
+    props.provider_data,
+  ]);
+  const { data = {} } = props;
   const provider_keys = Object.keys(provider_data || {});
   const [schema, setSchema] = React.useState(getSchema(config, provider_keys));
 
