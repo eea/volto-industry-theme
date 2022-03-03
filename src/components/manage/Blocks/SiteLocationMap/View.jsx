@@ -36,7 +36,10 @@ const View = (props) => {
     if (!siteInspireId) return;
     const esrijsonFormat = new format.EsriJSON();
     // Get site feature
-    const url = getSiteLocationURL(siteInspireId);
+    const url = getSiteLocationURL(
+      siteInspireId,
+      props.query.siteReportingYear,
+    );
     fetch(url).then(function (response) {
       if (response.status !== 200) return;
       response.json().then(function (data) {
@@ -45,7 +48,7 @@ const View = (props) => {
           vs.addFeatures(features);
           setOptions({
             ...options,
-            extent: features[0].getGeometry().getExtent(),
+            extent: features[0]?.getGeometry()?.getExtent(),
           });
         }
       });

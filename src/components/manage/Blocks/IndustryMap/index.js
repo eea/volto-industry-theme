@@ -148,7 +148,7 @@ export const getLayerSitesURL = (extent) => {
 };
 
 export const getLayerRegionsURL = (extent) => {
-  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_Clusters_WM/FeatureServer/0/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=${encodeURIComponent(
+  return `https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_Clusters_WM/MapServer/0/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=${encodeURIComponent(
     '{"xmin":' +
       extent[0] +
       ',"ymin":' +

@@ -9,7 +9,9 @@ import '../style.css';
 
 const View = (props) => {
   const [siteDetails, setSiteDetails] = React.useState({});
-  const { provider_data = {} } = props;
+  const provider_data = React.useMemo(() => props.provider_data || {}, [
+    props.provider_data,
+  ]);
   const query = { ...props.query };
   const siteReportingYear = parseInt(query.siteReportingYear || '');
   const index = provider_data?.euregReportingYear?.indexOf(siteReportingYear);
