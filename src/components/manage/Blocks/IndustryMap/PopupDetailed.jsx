@@ -52,29 +52,58 @@ class PopupDetailed extends React.PureComponent {
         </Modal.Header>
         <Modal.Content>
           <h3>Site contents</h3>
-          {data.nFacilities ? (
-            <p>
-              {data.nFacilities + ' '}
-              Facilit
-              {data.nFacilities > 1 ? 'ies' : 'y'}
+          {data.count_factype_EPRTR ? (
+            <p className="info">
+              {data.count_factype_EPRTR} EPRTR{' '}
+              {data.count_factype_EPRTR > 1 ? 'Facilities' : 'Facility'}
             </p>
           ) : (
             ''
           )}
-          {data.nInstallations ? (
-            <p>
-              {data.nInstallations + ' '}
-              Installation
-              {data.nInstallations > 1 ? 's' : ''}
+          {data.count_factype_NONEPRTR ? (
+            <p className="info">
+              {data.count_factype_NONEPRTR} NON-EPRTR{' '}
+              {data.count_factype_NONEPRTR > 1 ? 'Facilities' : 'Facility'}
             </p>
           ) : (
             ''
           )}
-          {data.nLCP ? (
-            <p>
-              {data.nLCP + ' '}
-              Large combustion plant
-              {data.nLCP > 1 ? 's' : ''}
+          {data.count_instype_IED ? (
+            <p className="info">
+              {data.count_instype_IED} IED Installation
+              {data.count_instype_IED > 1 ? 's' : ''}
+            </p>
+          ) : (
+            ''
+          )}
+          {data.count_instype_NONIED ? (
+            <p className="info">
+              {data.count_instype_NONIED} NON-IED Installation
+              {data.count_instype_NONIED > 1 ? 's' : ''}
+            </p>
+          ) : (
+            ''
+          )}
+          {data.count_plantType_LCP ? (
+            <p className="info">
+              {data.count_plantType_LCP} Large combustion plant
+              {data.count_plantType_LCP > 1 ? 's' : ''}
+            </p>
+          ) : (
+            ''
+          )}
+          {data.count_plantType_WI ? (
+            <p className="info">
+              {data.count_plantType_WI} Waste incinerator
+              {data.count_plantType_WI > 1 ? 's' : ''}
+            </p>
+          ) : (
+            ''
+          )}
+          {data.count_plantType_coWI ? (
+            <p className="info">
+              {data.count_plantType_coWI} Co-waste incinerator
+              {data.count_plantType_coWI > 1 ? 's' : ''}
             </p>
           ) : (
             ''

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Loader } from 'semantic-ui-react';
 import Map from '@eeacms/volto-openlayers-map/Map';
 import { Interactions } from '@eeacms/volto-openlayers-map/Interactions';
 import { Controls } from '@eeacms/volto-openlayers-map/Controls';
@@ -15,6 +16,7 @@ const View = (props) => {
   const map = React.useRef();
   const [options, setOptions] = React.useState({});
   const [vectorSource, setVectorSource] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const { format, proj, source, style } = openlayers;
   const { siteInspireId } = props.query;
 
@@ -40,10 +42,13 @@ const View = (props) => {
       siteInspireId,
       props.query.siteReportingYear,
     );
+    vs.refresh();
+    setLoading(true);
     fetch(url).then(function (response) {
       if (response.status !== 200) return;
       response.json().then(function (data) {
         const features = esrijsonFormat.readFeatures(data);
+        setLoading(false);
         if (features.length > 0) {
           vs.addFeatures(features);
           setOptions({
@@ -54,7 +59,7 @@ const View = (props) => {
       });
     });
     /* eslint-disable-next-line */
-  }, [siteInspireId]);
+  }, [siteInspireId, props.query.siteReportingYear]);
 
   React.useEffect(() => {
     if (map.current) {
@@ -118,6 +123,7 @@ const View = (props) => {
             pointer={false}
             select={false}
           />
+          <Loader active={loading} />
         </Map>
       </PrivacyProtection>
     </div>
