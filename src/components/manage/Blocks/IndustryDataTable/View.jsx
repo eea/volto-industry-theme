@@ -41,13 +41,13 @@ const getQuery = (query) => {
       ? { 'bat_conclusions[like]': query.filter_bat_conclusions }
       : {}),
     ...(isNotEmpty(query.filter_reporting_years)
-      ? { 'Site_reporting_year[in]:list': query.filter_reporting_years }
+      ? { 'Site_reporting_year[in]': query.filter_reporting_years }
       : {}),
     // ...(isNotEmpty(query.nuts_latest)
     //   ? { 'nuts_regions[like]': query.nuts_latest }
     //   : {}),
     ...(isNotEmpty(query.filter_countries)
-      ? { 'countryCode[in]:list': query.filter_countries }
+      ? { 'countryCode[in]': query.filter_countries }
       : {}),
     ...(query.filter_search?.text && query.filter_search?.type === 'search-site'
       ? { siteName: query.filter_search.text }
@@ -88,10 +88,10 @@ const View = (props) => {
       ...context.state,
       extraQuery: {
         ...getQuery(query || {}),
-        'shape_wm.STX[gte]:float': extent[0],
-        'shape_wm.STX[lte]:float': extent[2],
-        'shape_wm.STY[gte]:float': extent[1],
-        'shape_wm.STY[lte]:float': extent[3],
+        'shape_wm.STX[gte]': extent[0],
+        'shape_wm.STX[lte]': extent[2],
+        'shape_wm.STY[gte]': extent[1],
+        'shape_wm.STY[lte]': extent[3],
       },
     });
     /* eslint-disable-next-line */
