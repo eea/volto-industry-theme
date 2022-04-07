@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { compose } from 'redux';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Placeholder } from 'semantic-ui-react';
-import cookie from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import ReactTooltip from 'react-tooltip';
 import { Button, Checkbox, Message } from 'semantic-ui-react';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
@@ -17,24 +18,31 @@ const getExpDays = () =>
     ? config.settings.embedCookieExpirationDays
     : 90;
 
-function saveCookie(domain_key) {
+function saveCookie(domain_key, cookies) {
   const date = new Date();
   date.setDate(date.getDate() + getExpDays());
 
-  cookie.save(key(domain_key), 'true', {
+  cookies.set(key(domain_key), 'true', {
     path: '/',
     expires: date,
   });
 }
 
-function canShow(domain_key) {
-  return cookie.load(key(domain_key)) === 'true';
+function canShow(domain_key, cookies) {
+  return cookies.get(key(domain_key)) === 'true';
 }
 
-export default ({ children, data = {}, block, onShow, ...rest }) => {
+const PrivacyProtection = ({
+  children,
+  cookies,
+  data = {},
+  block,
+  onShow,
+  ...rest
+}) => {
   const { dataprotection = {} } = data;
   const [visible, setVisibility] = useState(false);
-  const defaultShow = canShow(dataprotection.privacy_cookie_key);
+  const defaultShow = canShow(dataprotection.privacy_cookie_key, cookies);
   const [show, setShow] = useState(defaultShow);
   const [remember, setRemember] = useState(true);
 
@@ -92,7 +100,10 @@ export default ({ children, data = {}, block, onShow, ...rest }) => {
                           onShow();
                         }
                         if (remember) {
-                          saveCookie(dataprotection.privacy_cookie_key);
+                          saveCookie(
+                            dataprotection.privacy_cookie_key,
+                            cookies,
+                          );
                         }
                       }}
                     >
@@ -131,3 +142,5 @@ export default ({ children, data = {}, block, onShow, ...rest }) => {
     </VisibilitySensor>
   );
 };
+
+export default compose(withCookies)(PrivacyProtection);

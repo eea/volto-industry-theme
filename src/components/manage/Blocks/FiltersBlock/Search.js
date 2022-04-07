@@ -155,7 +155,7 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
 
   return (
     <div className="search-container" ref={searchContainer}>
-      <form autocomplete="off" name="Map search">
+      <form autoComplete="off" name="Map search">
         <Input
           loading={loading}
           value={value}
