@@ -23,22 +23,77 @@ const isNotEmpty = (item) => {
   return true;
 };
 
+const getFacilityTypes = (facilityTypes = []) => {
+  if (facilityTypes.length === 2 || !facilityTypes.length) return '';
+  const type = facilityTypes.includes('EPRTR') ? 'EPRTR' : 'NONEPRTR';
+  return [
+    {
+      or: [
+        { like: ['facilityTypes', { literal: `${type}%` }] },
+        { like: ['facilityTypes', { literal: `% ${type}` }] },
+      ],
+    },
+  ];
+};
+
+const getPollutantGroups = (pollutantGroups = []) => {
+  if (pollutantGroups.length === 1) {
+    return [
+      {
+        or: [
+          { like: ['air_groups', { literal: pollutantGroups[0] }] },
+          { like: ['water_groups', { literal: pollutantGroups[0] }] },
+        ],
+      },
+    ];
+  }
+  return [
+    {
+      or: [
+        {
+          and: pollutantGroups.map((group) => ({
+            like: ['air_groups', { literal: group }],
+          })),
+        },
+        {
+          and: pollutantGroups.map((group) => ({
+            like: ['water_groups', { literal: group }],
+          })),
+        },
+      ],
+    },
+  ];
+};
+
 const getQuery = (query) => {
   const obj = {
     ...(isNotEmpty(query.filter_pollutants)
-      ? { 'pollutants[like]': query.filter_pollutants }
-      : {}),
-    ...(isNotEmpty(query.filter_pollutant_groups)
-      ? { 'air_groups[like]': query.filter_pollutant_groups }
+      ? {
+          'pollutants[like]': query.filter_pollutants.map(
+            (filter) => `%${filter}%`,
+          ),
+        }
       : {}),
     ...(isNotEmpty(query.filter_permit_years)
-      ? { 'permit_years[like]': query.filter_permit_years }
+      ? {
+          'permit_years[like]': query.filter_permit_years.map(
+            (filter) => `%${filter}%`,
+          ),
+        }
       : {}),
     ...(isNotEmpty(query.filter_permit_types)
-      ? { 'permit_types[like]': query.filter_permit_types }
+      ? {
+          'permit_types[like]': query.filter_permit_types.map(
+            (filter) => `%${filter}%`,
+          ),
+        }
       : {}),
     ...(isNotEmpty(query.filter_bat_conclusions)
-      ? { 'bat_conclusions[like]': query.filter_bat_conclusions }
+      ? {
+          'bat_conclusions[like]': query.filter_bat_conclusions.map(
+            (filter) => `%${filter}%`,
+          ),
+        }
       : {}),
     ...(isNotEmpty(query.filter_reporting_years)
       ? { 'Site_reporting_year[in]': query.filter_reporting_years }
@@ -53,8 +108,20 @@ const getQuery = (query) => {
       ? { siteName: query.filter_search.text }
       : {}),
   };
-
   return obj;
+};
+
+const getConditions = (query) => {
+  return [
+    ...(isNotEmpty(query.filter_facility_types)
+      ? getFacilityTypes(query.filter_facility_types)
+      : []),
+    ...(isNotEmpty(query.filter_pollutant_groups)
+      ? getPollutantGroups(
+          query.filter_pollutant_groups.map((filter) => `%${filter}%`),
+        )
+      : []),
+  ];
 };
 
 const View = (props) => {
@@ -93,6 +160,7 @@ const View = (props) => {
         'shape_wm.STY[gte]': extent[1],
         'shape_wm.STY[lte]': extent[3],
       },
+      extraConditions: getConditions(query),
     });
     /* eslint-disable-next-line */
   }, [JSON.stringify(query)]);
