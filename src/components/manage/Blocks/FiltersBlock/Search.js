@@ -185,7 +185,10 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
               />
             </>
           }
-          placeholder="Search for country, region, city or a site name"
+          placeholder={
+            data.searchPlaceholder ||
+            'Search for country, region, city or a site name'
+          }
           onChange={(_, data) => {
             debounce(onChange, data);
             setValue(data.value);

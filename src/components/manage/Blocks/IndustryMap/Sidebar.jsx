@@ -157,7 +157,7 @@ class Sidebar extends React.Component {
       <div id="map-sidebar" className="outline-button">
         <form autoComplete="off" name="Map simple filters">
           <h2>
-            <span>Dynamic filters</span>{' '}
+            <span>Quick filters</span>{' '}
             <i
               aria-hidden
               className="delete icon"
@@ -195,7 +195,7 @@ class Sidebar extends React.Component {
             placeholder={'Select country'}
             value={query.filter_countries || []}
           />
-          <h3>Industry</h3>
+          <h3>Industrial sector</h3>
           <Dropdown
             fluid
             search
@@ -206,7 +206,7 @@ class Sidebar extends React.Component {
               this.setDropdownValue(data, 'filter_industries');
             }}
             options={options.industries || noOptions}
-            placeholder={'Select industry'}
+            placeholder={'Select industrial sector'}
             value={query.filter_industries || []}
           />
           <h3>Facility type</h3>
@@ -221,6 +221,20 @@ class Sidebar extends React.Component {
             name="filter_facility_types"
             label="NONEPRTR"
             checked={this.isChecked('filter_facility_types', 'NONEPRTR')}
+            onChange={this.setCheckboxValue}
+          />
+          <h3>Installation type</h3>
+          <Checkbox
+            name="filter_installation_types"
+            label="IED"
+            style={{ marginRight: '1rem' }}
+            checked={this.isChecked('filter_installation_types', 'IED')}
+            onChange={this.setCheckboxValue}
+          />
+          <Checkbox
+            name="filter_installation_types"
+            label="NONIED"
+            checked={this.isChecked('filter_installation_types', 'NONIED')}
             onChange={this.setCheckboxValue}
           />
           <button onClick={this.clearFilters} className="clear-button">
