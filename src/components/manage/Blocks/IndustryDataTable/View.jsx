@@ -36,6 +36,42 @@ const getFacilityTypes = (facilityTypes = []) => {
   ];
 };
 
+const getInstallationTypes = (installationTypes = []) => {
+  return [
+    {
+      and: [
+        ...(installationTypes.indexOf('IED') !== -1
+          ? [{ gte: ['count_instype_IED', 1] }]
+          : []),
+        ...(installationTypes.indexOf('NONIED') !== -1
+          ? [{ gte: ['count_instype_NONIED', 1] }]
+          : []),
+      ],
+    },
+  ];
+};
+
+const getThematicInformation = (thematicInformation = []) => {
+  return [
+    {
+      and: [
+        ...(thematicInformation.indexOf('has_release') !== -1
+          ? [{ gt: ['has_release_data', 0] }]
+          : []),
+        ...(thematicInformation.indexOf('has_transfer') !== -1
+          ? [{ gt: ['has_transfer_data', 0] }]
+          : []),
+        ...(thematicInformation.indexOf('has_waste') !== -1
+          ? [{ gt: ['has_waste_data', 0] }]
+          : []),
+        ...(thematicInformation.indexOf('has_seveso') !== -1
+          ? [{ gt: ['has_seveso', 0] }]
+          : []),
+      ],
+    },
+  ];
+};
+
 const getPollutantGroups = (pollutantGroups = []) => {
   if (pollutantGroups.length === 1) {
     return [
@@ -67,6 +103,16 @@ const getPollutantGroups = (pollutantGroups = []) => {
 
 const getQuery = (query) => {
   const obj = {
+    ...(isNotEmpty(query.filter_industries)
+      ? {
+          'eprtr_sectors[in]': query.filter_industries,
+        }
+      : {}),
+    ...(isNotEmpty(query.filter_eprtr_AnnexIActivity)
+      ? {
+          'eprtr_AnnexIActivity[in]': query.filter_eprtr_AnnexIActivity,
+        }
+      : {}),
     ...(isNotEmpty(query.filter_pollutants)
       ? {
           'pollutants[like]': query.filter_pollutants.map(
@@ -115,6 +161,12 @@ const getConditions = (query) => {
   return [
     ...(isNotEmpty(query.filter_facility_types)
       ? getFacilityTypes(query.filter_facility_types)
+      : []),
+    ...(isNotEmpty(query.filter_installation_types)
+      ? getInstallationTypes(query.filter_installation_types)
+      : []),
+    ...(isNotEmpty(query.filter_thematic_information)
+      ? getThematicInformation(query.filter_thematic_information)
       : []),
     ...(isNotEmpty(query.filter_pollutant_groups)
       ? getPollutantGroups(

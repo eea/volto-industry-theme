@@ -12,7 +12,12 @@ const filters = [
     featureKey: 'batConclusionCode',
     op: 'like',
   },
-  { queryKey: 'filter_industries', featureKey: 'eea_activities', op: 'like' },
+  { queryKey: 'filter_industries', featureKey: 'eprtr_sectors', op: 'like' },
+  {
+    queryKey: 'filter_eprtr_AnnexIActivity',
+    featureKey: 'eprtr_AnnexIActivity',
+    op: 'like',
+  },
   { queryKey: 'nuts_latest', featureKey: 'nuts_regions', op: 'like' },
   { queryKey: 'filter_permit_types', featureKey: 'permit_types', op: 'like' },
   { queryKey: 'filter_permit_years', featureKey: 'permitYears', op: 'like' },
@@ -246,7 +251,9 @@ export const filterFeature = (feature, query = {}) => {
 
 export const getWhereStatement = (data) => {
   const query = { ...data, nuts_latest: getLatestRegions(data).nuts_latest };
-  const facility_types = query.filter_facility_types;
+  const facility_types = query.filter_facility_types || [];
+  const installation_types = query.filter_installation_types || [];
+  const thematic_information = query.filter_thematic_information || [];
   const search = query.filter_search;
   let filter,
     where = [];
@@ -276,6 +283,30 @@ export const getWhereStatement = (data) => {
     where[filter++] = [
       `(facilityTypes LIKE '${type}%') OR (facilityTypes LIKE '% ${type}')`,
     ];
+  }
+
+  if (installation_types?.indexOf('IED') !== -1) {
+    where[filter++] = ['count_instype_IED >= 1'];
+  }
+
+  if (installation_types?.indexOf('NONIED') !== -1) {
+    where[filter++] = ['count_instype_NONIED >= 1'];
+  }
+
+  if (thematic_information?.indexOf('has_release') !== -1) {
+    where[filter++] = ['has_release_data > 0'];
+  }
+
+  if (thematic_information?.indexOf('has_transfer') !== -1) {
+    where[filter++] = ['has_transfer_data > 0'];
+  }
+
+  if (thematic_information?.indexOf('has_waste') !== -1) {
+    where[filter++] = ['has_waste_data > 0'];
+  }
+
+  if (thematic_information?.indexOf('has_seveso') !== -1) {
+    where[filter++] = ['has_seveso > 0'];
   }
 
   if (search?.type === 'site' && search?.text) {

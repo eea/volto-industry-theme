@@ -10,6 +10,7 @@ export const getOptions = (data, appendNoValue = true) => {
         : data.opt_key[index],
       value: data.opt_value[index],
       text: data.opt_text[index],
+      ...(data.opt_sector?.[index] ? { sector: data.opt_sector[index] } : {}),
     })),
   ];
 };
@@ -17,8 +18,10 @@ export const getOptions = (data, appendNoValue = true) => {
 export const inputsKeys = [
   'filter_bat_conclusions',
   'filter_countries',
+  'filter_eprtr_AnnexIActivity',
   'filter_facility_types',
   'filter_industries',
+  'filter_installation_types',
   'filter_nuts_1',
   'filter_nuts_2',
   'filter_permit_types',
@@ -28,6 +31,7 @@ export const inputsKeys = [
   'filter_pollutants',
   'filter_reporting_years',
   'filter_river_basin_districts',
+  'filter_thematic_information',
 ];
 
 export const permitTypes = [

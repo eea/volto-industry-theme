@@ -25,10 +25,13 @@ export default {
     {
       id: 'default',
       title: 'Default',
-      fields: ['providers'],
+      fields: ['searchPlaceholder', 'providers'],
     },
   ],
   properties: {
+    searchPlaceholder: {
+      title: 'Search placeholder',
+    },
     providers: {
       title: 'Providers',
       schema: providerSchema,
