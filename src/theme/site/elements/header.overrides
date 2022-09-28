@@ -24,6 +24,8 @@
           color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           text-transform: uppercase;
+          min-height: 50px;
+          min-width: 50px;
 
           &.active {
             background-color: transparent !important;
