@@ -284,13 +284,6 @@ const ModalView = ({
             setInputs={setInputs}
           />
           <h3>Type of entities</h3>
-          <Checkbox
-            name="filter_thematic_information"
-            label="Seveso"
-            value="has_seveso"
-            checked={isChecked('filter_thematic_information', 'has_seveso')}
-            onChange={setCheckboxValue}
-          />
           <h4>Facility type</h4>
           <Checkbox
             name="filter_facility_types"
@@ -318,6 +311,14 @@ const ModalView = ({
             name="filter_installation_types"
             label="NONIED"
             checked={isChecked('filter_installation_types', 'NONIED')}
+            onChange={setCheckboxValue}
+          />
+          <div style={{ marginBottom: '2rem' }} />
+          <Checkbox
+            name="filter_thematic_information"
+            label="Site with a Seveso establishment"
+            value="has_seveso"
+            checked={isChecked('filter_thematic_information', 'has_seveso')}
             onChange={setCheckboxValue}
           />
           <div style={{ marginBottom: '2rem' }} />
@@ -434,6 +435,7 @@ const ModalView = ({
             options={options.bat_conclusions}
             setInputs={setInputs}
           />
+          <div style={{ marginBottom: '1rem' }} />
         </form>
       </Modal.Content>
       <Modal.Actions className="outline-button">
