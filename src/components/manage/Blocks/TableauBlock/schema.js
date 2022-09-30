@@ -1,4 +1,14 @@
-import { tableauVersions, getLatestTableauVersion } from 'tableau-api-js';
+const tableauVersions = [
+  '2.8.0',
+  '2.7.0',
+  '2.6.0',
+  '2.5.0',
+  '2.4.0',
+  '2.3.0',
+  '2.2.2',
+  '2.1.2',
+  '2.0.3',
+];
 
 const urlParametersSchema = {
   title: 'Parameter',
@@ -74,7 +84,7 @@ export default (config) => ({
       choices: [
         ...tableauVersions.map((version) => [version, `tableau-${version}`]),
       ],
-      default: config.settings.tableauVersion || getLatestTableauVersion(),
+      default: config.settings.tableauVersion || '2.8.0',
     },
     url: {
       title: 'Url',
