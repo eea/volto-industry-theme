@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import Tableau from '@eeacms/volto-tableau/Tableau/View';
 import config from '@plone/volto/registry';
-import { getLatestTableauVersion } from 'tableau-api-js';
 import { connectToProviderData } from '@eeacms/volto-datablocks/hocs';
 import qs from 'querystring';
 import '@eeacms/volto-tableau/less/tableau.less';
@@ -38,9 +37,7 @@ const View = (props) => {
     autoScale = false,
   } = data;
   const version =
-    props.data.version ||
-    config.settings.tableauVersion ||
-    getLatestTableauVersion();
+    props.data.version || config.settings.tableauVersion || '2.8.0';
   const device = getDevice(config, screen.page?.width || Infinity);
   const breakpointUrl = breakpointUrls.filter(
     (breakpoint) => breakpoint.device === device,
