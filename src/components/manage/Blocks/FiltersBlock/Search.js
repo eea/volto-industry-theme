@@ -24,10 +24,10 @@ const getSites = (value) => {
   const db_version =
     process.env.RAZZLE_DB_VERSION || config.settings.db_version || 'latest';
   const query = `SELECT siteName
-    FROM [IED].[${db_version}].[SiteMap]
-    WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${value}%'
-    GROUP BY siteName
-    ORDER BY [siteName]`;
+  FROM [IED].[${db_version}].[SiteMap]
+  WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${value}%'
+  GROUP BY siteName
+  ORDER BY [siteName]`;
 
   return axios.get(
     providerUrl + `?${getEncodedQueryString(query)}&p=1&nrOfHits=6`,
@@ -43,11 +43,27 @@ const getLocations = (value, providers_data) => {
   );
 };
 
+const getFacilities = (value) => {
+  const providerUrl = config.settings.providerUrl;
+  const db_version =
+    process.env.RAZZLE_DB_VERSION || config.settings.db_version || 'latest';
+  const query = `SELECT facilityName
+  FROM [IED].[${db_version}].[ProductionFacility]
+  WHERE [facilityName] COLLATE Latin1_General_CI_AI LIKE '%${value}%'
+  GROUP BY facilityName
+  ORDER BY [facilityName]`;
+
+  return axios.get(
+    providerUrl + `?${getEncodedQueryString(query)}&p=1&nrOfHits=6`,
+  );
+};
+
 const Search = ({ data, providers_data, query, setQuery, ...props }) => {
   const searchContainer = React.useRef();
   const [loading, setLoading] = React.useState(false);
   const [showResults, setShowResults] = React.useState(false);
   const [sites, setSites] = React.useState([]);
+  const [facilities, setFacilities] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
 
   const value = React.useMemo(() => {
@@ -69,18 +85,65 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
 
   const items = React.useMemo(() => {
     if (loading) return [];
-    const half = MAX_RESULTS / 2;
-    let _locations = locations.slice(0, half);
-    let _sites = sites.slice(0, half);
-    if (_locations.length < half) {
-      _sites = sites.slice(0, MAX_RESULTS - _locations.length);
+    const slices = MAX_RESULTS / 3;
+    let total_entities = 1;
+    let empty_slices = 0;
+    let entities = 0;
+    let _locations = locations.slice(0, slices);
+    let _sites = sites.slice(0, slices);
+    let _facilities = facilities.slice(0, slices);
+
+    if (_locations.length < slices) {
+      empty_slices += slices - _locations.length;
+      entities++;
+    } else if (_locations.length <= slices) {
+      total_entities++;
     }
-    if (_sites.length < half) {
-      _locations = locations.slice(0, MAX_RESULTS - _sites.length);
+    if (_sites.length < slices) {
+      empty_slices += slices - _sites.length;
+      entities++;
+    } else if (_sites.length <= slices) {
+      total_entities++;
+    }
+    if (_facilities.length < slices) {
+      empty_slices += slices - _facilities.length;
+      entities++;
+    } else if (_facilities.length <= slices) {
+      total_entities++;
     }
 
-    return [..._locations, ..._sites];
-  }, [sites, locations, loading]);
+    if (locations.length > slices && empty_slices > 0) {
+      const used_slices = Math.round(
+        empty_slices / (total_entities - entities),
+      );
+      _locations = locations.slice(0, slices + used_slices);
+      empty_slices -= used_slices;
+    } else {
+      total_entities--;
+    }
+
+    if (sites.length > slices && empty_slices > 0) {
+      const used_slices = Math.round(
+        empty_slices / (total_entities - entities),
+      );
+      _sites = sites.slice(0, slices + used_slices);
+      empty_slices -= used_slices;
+    } else {
+      total_entities--;
+    }
+
+    if (facilities.length > slices && empty_slices > 0) {
+      const used_slices = Math.round(
+        empty_slices / (total_entities - entities),
+      );
+      _facilities = facilities.slice(0, slices + used_slices);
+      empty_slices -= used_slices;
+    } else {
+      total_entities--;
+    }
+
+    return [..._locations, ..._sites, ..._facilities];
+  }, [sites, facilities, locations, loading]);
 
   const handleClickOutside = React.useCallback((event) => {
     if (!doesNodeContainClick(searchContainer.current, event)) {
@@ -96,6 +159,7 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
       const requests = [];
       if (value.length >= 3) {
         requests.push(getSites(value));
+        requests.push(getFacilities(value));
         requests.push(getLocations(value, providers_data));
 
         Promise.all(requests).then((responses) => {
@@ -105,17 +169,24 @@ const Search = ({ data, providers_data, query, setQuery, ...props }) => {
               type: 'site',
             })) || [],
           );
+          setFacilities(
+            responses[1].data?.results?.map((item) => ({
+              text: item.facilityName,
+              type: 'facility',
+            })) || [],
+          );
           setLocations(
-            responses[1].data?.suggestions?.map((item) => ({
+            responses[2].data?.suggestions?.map((item) => ({
               ...item,
               type: 'location',
             })) || [],
           );
+          setLoading(false);
         });
-        setLoading(false);
       } else {
         setLoading(false);
         setSites([]);
+        setFacilities([]);
         setLocations([]);
       }
     },

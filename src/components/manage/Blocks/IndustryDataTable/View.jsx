@@ -177,6 +177,7 @@ const getConditions = (query) => {
 };
 
 const View = (props) => {
+  const table = React.useRef();
   const context = React.useContext(ConnectorContext);
   const [openedRow, setOpenedRow] = React.useState(null);
   const {
@@ -218,7 +219,7 @@ const View = (props) => {
   }, [JSON.stringify(query)]);
 
   return (
-    <div className="industry-table">
+    <div ref={table} className="industry-table">
       {row_size && tableData ? (
         <Table
           textAlign="left"
@@ -456,7 +457,9 @@ const View = (props) => {
                     <Menu.Item
                       as="a"
                       icon
-                      disabled={props.isPending || pagination.activePage === 1}
+                      disabled={
+                        props.loadingProviderData || pagination.activePage === 1
+                      }
                       onClick={() => {
                         if (pagination.activePage > 1) {
                           updatePagination({
@@ -469,7 +472,7 @@ const View = (props) => {
                     </Menu.Item>
                     <Menu.Item fitted>
                       <Loader
-                        disabled={!props.isPending}
+                        disabled={!props.loadingProviderData}
                         active
                         inline
                         size="tiny"
@@ -479,7 +482,7 @@ const View = (props) => {
                       as="a"
                       icon
                       disabled={
-                        props.isPending ||
+                        props.loadingProviderData ||
                         pagination.activePage === pagination.lastPage
                       }
                       onClick={() => {

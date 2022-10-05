@@ -25,6 +25,7 @@ import {
   getLayerBaseURL,
   getLocationExtent,
   getSiteExtent,
+  getFacilityExtent,
   getCountriesExtent,
   getWhereStatement,
 } from './index';
@@ -174,6 +175,31 @@ class View extends React.PureComponent {
         });
       } else if (filter_change.type === 'search-site') {
         getSiteExtent(filter_search).then(({ data }) => {
+          const extent = data?.results?.[0] || {};
+          if (
+            extent.MIN_X === null ||
+            extent.MIN_Y === null ||
+            extent.MAX_X === null ||
+            extent.MAX_Y === null
+          ) {
+            toast.warn(
+              <Toast
+                warn
+                title=""
+                content={`No results for ${filter_search.text}`}
+              />,
+            );
+          } else {
+            this.map.current
+              .getView()
+              .fit([extent.MIN_X, extent.MIN_Y, extent.MAX_X, extent.MAX_Y], {
+                maxZoom: 16,
+                duration: 1000,
+              });
+          }
+        });
+      } else if (filter_change.type === 'search-facility') {
+        getFacilityExtent(filter_search).then(({ data }) => {
           const extent = data?.results?.[0] || {};
           if (
             extent.MIN_X === null ||
