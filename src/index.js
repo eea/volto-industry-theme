@@ -28,6 +28,7 @@ const applyConfig = (config) => {
       '#F6F6F6',
       '#EDEDED',
     ],
+    db_version: 'v1',
   };
 
   config.blocks.groupBlocksOrder = [

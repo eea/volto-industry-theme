@@ -331,6 +331,10 @@ export const getWhereStatement = (data) => {
     where[filter++] = [`siteName LIKE '${search.text}%'`];
   }
 
+  if (search?.type === 'facility' && search?.text) {
+    where[filter++] = [`facilityNames LIKE '${search.text}%'`];
+  }
+
   return where
     .filter((w) => w.length)
     .map((w) => `(${w.join(' OR ')})`)

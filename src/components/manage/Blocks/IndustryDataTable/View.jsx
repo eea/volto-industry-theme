@@ -150,9 +150,6 @@ const getQuery = (query) => {
     ...(isNotEmpty(query.filter_countries)
       ? { 'countryCode[in]': query.filter_countries }
       : {}),
-    ...(query.filter_search?.text && query.filter_search?.type === 'search-site'
-      ? { siteName: query.filter_search.text }
-      : {}),
   };
   return obj;
 };
@@ -172,6 +169,27 @@ const getConditions = (query) => {
       ? getPollutantGroups(
           query.filter_pollutant_groups.map((filter) => `%${filter}%`),
         )
+      : []),
+    ...(query.filter_search?.text && query.filter_change?.type === 'search-site'
+      ? [
+          {
+            like: [
+              'siteName',
+              { literal: query.filter_search.text.replaceAll("'", "''") },
+            ],
+          },
+        ]
+      : []),
+    ...(query.filter_search?.text &&
+    query.filter_change?.type === 'search-facility'
+      ? [
+          {
+            like: [
+              'facilityNames',
+              { literal: query.filter_search.text.replaceAll("'", "''") },
+            ],
+          },
+        ]
       : []),
   ];
 };
