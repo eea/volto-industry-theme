@@ -150,9 +150,6 @@ const getQuery = (query) => {
     ...(isNotEmpty(query.filter_countries)
       ? { 'countryCode[in]': query.filter_countries }
       : {}),
-    ...(query.filter_search?.text && query.filter_search?.type === 'search-site'
-      ? { siteName: query.filter_search.text }
-      : {}),
   };
   return obj;
 };
@@ -173,10 +170,32 @@ const getConditions = (query) => {
           query.filter_pollutant_groups.map((filter) => `%${filter}%`),
         )
       : []),
+    ...(query.filter_search?.text && query.filter_change?.type === 'search-site'
+      ? [
+          {
+            like: [
+              'siteName',
+              { literal: query.filter_search.text.replaceAll("'", "''") },
+            ],
+          },
+        ]
+      : []),
+    ...(query.filter_search?.text &&
+    query.filter_change?.type === 'search-facility'
+      ? [
+          {
+            like: [
+              'facilityNames',
+              { literal: query.filter_search.text.replaceAll("'", "''") },
+            ],
+          },
+        ]
+      : []),
   ];
 };
 
 const View = (props) => {
+  const table = React.useRef();
   const context = React.useContext(ConnectorContext);
   const [openedRow, setOpenedRow] = React.useState(null);
   const {
@@ -218,7 +237,7 @@ const View = (props) => {
   }, [JSON.stringify(query)]);
 
   return (
-    <div className="industry-table">
+    <div ref={table} className="industry-table">
       {row_size && tableData ? (
         <Table
           textAlign="left"
@@ -456,7 +475,9 @@ const View = (props) => {
                     <Menu.Item
                       as="a"
                       icon
-                      disabled={props.isPending || pagination.activePage === 1}
+                      disabled={
+                        props.loadingProviderData || pagination.activePage === 1
+                      }
                       onClick={() => {
                         if (pagination.activePage > 1) {
                           updatePagination({
@@ -469,7 +490,7 @@ const View = (props) => {
                     </Menu.Item>
                     <Menu.Item fitted>
                       <Loader
-                        disabled={!props.isPending}
+                        disabled={!props.loadingProviderData}
                         active
                         inline
                         size="tiny"
@@ -479,7 +500,7 @@ const View = (props) => {
                       as="a"
                       icon
                       disabled={
-                        props.isPending ||
+                        props.loadingProviderData ||
                         pagination.activePage === pagination.lastPage
                       }
                       onClick={() => {
