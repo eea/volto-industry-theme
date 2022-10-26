@@ -332,7 +332,7 @@ export const getWhereStatement = (data) => {
   }
 
   if (search?.type === 'facility' && search?.text) {
-    where[filter++] = [`facilityNames LIKE '%${search.text}%'`];
+    where[filter++] = [`facilityNames LIKE '%${search.text.trim()}%'`];
   }
 
   return where
