@@ -10,6 +10,14 @@ import { getBaseUrl } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { setConnectedDataParameters } from '@eeacms/volto-datablocks/actions';
 
+export function cleanUpText(value) {
+  let text = value.replaceAll('\n', '');
+  text = text.replaceAll("'", "''");
+  text = text.replace(/^\s+|\s+$/gm, '');
+
+  return text;
+}
+
 export function removeValue(arr) {
   if (!arr || arr.length === 0) return [];
   let what,
