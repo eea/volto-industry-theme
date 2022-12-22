@@ -7,6 +7,7 @@ import cx from 'classnames';
 import RenderComponent from '@eeacms/volto-datablocks/components/manage/Blocks/SimpleDataTable/components';
 import { ConnectorContext } from '@eeacms/volto-datablocks/hocs';
 import { setQuery } from '@eeacms/volto-industry-theme/actions';
+import { cleanUpText } from '@eeacms/volto-industry-theme/helpers';
 
 import leftSVG from '@plone/volto/icons/left-key.svg';
 import rightSVG from '@plone/volto/icons/right-key.svg';
@@ -175,7 +176,7 @@ const getConditions = (query) => {
           {
             like: [
               'siteName',
-              { literal: query.filter_search.text.replaceAll("'", "''") },
+              { literal: cleanUpText(query.filter_search.text) },
             ],
           },
         ]
@@ -186,7 +187,7 @@ const getConditions = (query) => {
           {
             like: [
               'facilityNames',
-              { literal: query.filter_search.text.replaceAll("'", "''") },
+              { literal: cleanUpText(query.filter_search.text) },
             ],
           },
         ]

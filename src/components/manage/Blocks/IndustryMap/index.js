@@ -2,7 +2,10 @@ import axios from 'axios';
 import config from '@plone/volto/registry';
 import sliderSVG from '@plone/volto/icons/slider.svg';
 import mapPlaceholder from '@eeacms/volto-industry-theme/components/PrivacyProtection/map_placeholder.png';
-import { getEncodedQueryString } from '@eeacms/volto-industry-theme/helpers';
+import {
+  cleanUpText,
+  getEncodedQueryString,
+} from '@eeacms/volto-industry-theme/helpers';
 import IndustryMapEdit from './Edit';
 import IndustryMapView from './View';
 
@@ -192,9 +195,8 @@ export const getSiteExtent = (data) => {
     MAX(shape_wm.STX) AS MAX_X,
     MAX(shape_wm.STY) AS MAX_Y
     FROM [IED].[${db_version}].[SiteMap]
-    WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${data.text.replaceAll(
-      "'",
-      "''",
+    WHERE [siteName] COLLATE Latin1_General_CI_AI LIKE '%${cleanUpText(
+      data.text,
     )}%'`)}`,
   );
 };
@@ -203,9 +205,6 @@ export const getFacilityExtent = (data) => {
   const db_version =
     process.env.RAZZLE_DB_VERSION || config.settings.db_version || 'latest';
 
-  let text = data.text.replaceAll('\n', '');
-  text = text.replaceAll("'", "''");
-
   return axios.get(
     `${config.settings.providerUrl}?${getEncodedQueryString(`SELECT
     MIN(shape_wm.STX) AS MIN_X,
@@ -213,7 +212,9 @@ export const getFacilityExtent = (data) => {
     MAX(shape_wm.STX) AS MAX_X,
     MAX(shape_wm.STY) AS MAX_Y
     FROM [IED].[${db_version}].[SiteMap]
-    WHERE [facilityNames] COLLATE Latin1_General_CI_AI LIKE '%${text}%'`)}`,
+    WHERE [facilityNames] COLLATE Latin1_General_CI_AI LIKE '%${cleanUpText(
+      data.text,
+    )}%'`)}`,
   );
 };
 
