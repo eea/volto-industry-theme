@@ -1,17 +1,20 @@
 import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
+import 'cypress-fail-fast';
+
 describe('Blocks Tests', () => {
   beforeEach(slateBeforeEach);
   afterEach(slateAfterEach);
 
   it('Add Block: Empty', () => {
     // Change page title
-    cy.clearSlateTitle();
-    cy.getSlateTitle().type('My Add-on Page');
+    cy.get('[contenteditable=true]').first().clear();
+
+    cy.get('[contenteditable=true]').first().type('My Add-on Page');
 
     cy.get('.documentFirstHeading').contains('My Add-on Page');
 
-    cy.getSlate().click();
+    cy.get('[contenteditable=true]').first().type('{enter}');
 
     // Add block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
