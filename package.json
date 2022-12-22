@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-industry-theme",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "@eeacms/volto-industry-theme: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -57,6 +57,6 @@
     "lint:fix": "../../../node_modules/eslint/bin/eslint.js --fix 'src/**/*.{js,jsx}'",
     "i18n": "mv .i18n.babel.config.js babel.config.js; rm -rf build/messages && NODE_ENV=production node src/i18n.js; mv babel.config.js .i18n.babel.config.js",
     "cypress:run": "../../../node_modules/cypress/bin/cypress run",
-    "cypress:open": "../../../node_modules/cypress/bin/cypress open"  
+    "cypress:open": "../../../node_modules/cypress/bin/cypress open"
   }
 }
