@@ -7,6 +7,7 @@ import {
   installAppExtras,
 } from '@eeacms/volto-industry-theme/components';
 import addonReducers from '@eeacms/volto-industry-theme/reducers';
+import installLink from '@plone/volto-slate/editor/plugins/AdvancedLink';
 
 import iconC from '@eeacms/volto-columns-block/ColumnsBlock/icons/one-third-right.svg';
 
@@ -29,6 +30,8 @@ const applyConfig = (config) => {
       '#EDEDED',
     ],
   };
+
+  config = installLink(config);
 
   config.blocks.groupBlocksOrder = [
     ...config.blocks.groupBlocksOrder,
