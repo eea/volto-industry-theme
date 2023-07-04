@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import Tableau from '@eeacms/volto-tableau/Tableau/View';
+import Tableau from '@eeacms/volto-tableau/Tableau/Tableau';
 import config from '@plone/volto/registry';
 import { connectToProviderData } from '@eeacms/volto-datablocks/hocs';
 import qs from 'querystring';
