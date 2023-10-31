@@ -20,12 +20,12 @@
         margin-top: 0;
 
         .item {
+          min-width: 50px;
+          min-height: 50px;
           align-self: center;
           color: rgba(255, 255, 255, 0.8);
           text-decoration: none;
           text-transform: uppercase;
-          min-height: 50px;
-          min-width: 50px;
 
           &.active {
             background-color: transparent !important;
@@ -105,7 +105,7 @@
 
 @media only screen and (max-width: @largestTabletScreen) {
   .item {
-    min-height: 50px;
     min-width: 50px;
+    min-height: 50px;
   }
 }
