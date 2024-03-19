@@ -32,9 +32,10 @@ const getQueryString = (query) => {
 const View = (props) => {
   const [siteStructure, setSiteStructure] = React.useState(null);
   const [siteDetails, setSiteDetails] = React.useState({});
-  const provider_data = React.useMemo(() => props.provider_data || {}, [
-    props.provider_data,
-  ]);
+  const provider_data = React.useMemo(
+    () => props.provider_data || {},
+    [props.provider_data],
+  );
   const provider_data_string = JSON.stringify(provider_data);
   const dataReady = provider_data?.siteInspireId?.length > 0;
   const pathname = removeTralingSlash(props.location.pathname || '');
@@ -220,7 +221,8 @@ const View = (props) => {
                                               {
                                                 ...newQuery,
                                                 facilityInspireId: facility,
-                                                installationInspireId: installation,
+                                                installationInspireId:
+                                                  installation,
                                                 lcpInspireId: lcp,
                                               },
                                             )}`}

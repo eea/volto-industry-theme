@@ -25,9 +25,10 @@ const getSiteByYear = (provider_data, year) => {
 
 const View = (props) => {
   const [siteHeader, setSiteHeader] = React.useState({});
-  const provider_data = React.useMemo(() => props.provider_data || {}, [
-    props.provider_data,
-  ]);
+  const provider_data = React.useMemo(
+    () => props.provider_data || {},
+    [props.provider_data],
+  );
   const query = { ...props.query };
   const siteReportingYear = parseInt(query.siteReportingYear || '');
 
