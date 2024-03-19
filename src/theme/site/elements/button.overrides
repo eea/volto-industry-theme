@@ -8,9 +8,9 @@ button {
   padding: @verticalPadding @horizontalPadding
     (@verticalPadding + @shadowOffset);
   border: 1px solid @textColor;
+  border-radius: @borderRadius;
   margin: 0em @horizontalMargin @verticalMargin 0em;
   background-color: transparent;
-  border-radius: @borderRadius;
   color: @textColor;
   cursor: pointer;
   font-weight: bold;
