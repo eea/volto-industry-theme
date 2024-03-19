@@ -99,8 +99,7 @@ const View = (props) => {
             <Layer.Tile
               source={
                 new source.XYZ({
-                  url:
-                    'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                  url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
                 })
               }
               zIndex={0}

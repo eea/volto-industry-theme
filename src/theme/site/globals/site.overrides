@@ -12,13 +12,13 @@
   }
 
   body::-webkit-scrollbar-track {
-    background: @trackBackground;
     border-radius: @trackBorderRadius;
+    background: @trackBackground;
   }
 
   body::-webkit-scrollbar-thumb {
-    background: @thumbBackground;
     border-radius: @thumbBorderRadius;
+    background: @thumbBackground;
     cursor: pointer;
     transition: @thumbTransition;
   }

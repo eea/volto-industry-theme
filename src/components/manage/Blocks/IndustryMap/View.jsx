@@ -55,8 +55,7 @@ const getSitesSource = (self) => {
         0: getWhereStatement(self.props.query),
       }),
     },
-    url:
-      'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
+    url: 'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer',
   });
 };
 
