@@ -38,7 +38,7 @@ const View = (props) => {
           content="Information regarding the facilities included in the industrial site"
           trigger={
             <div className="popup-svg">
-              <Icon name={infoSVG} size="20px" color="#E2776B" />
+              <Icon name={infoSVG} size="20px" color="#289588" />
             </div>
           }
         />

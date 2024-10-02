@@ -24,7 +24,7 @@ const PermitingAuthority = (props) => {
           content="Authority, body or bodies responsible for issuing a permit to a given facility"
           trigger={
             <div className="popup-svg">
-              <Icon name={infoSVG} size="20px" color="#E2776B" />
+              <Icon name={infoSVG} size="20px" color="#289588" />
             </div>
           }
         />

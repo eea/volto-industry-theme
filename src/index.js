@@ -22,9 +22,9 @@ const applyConfig = (config) => {
     tableauVersion: '2.3.0',
     available_colors: [
       '#81C9DB',
-      '#5397B2',
+      '#2e3e4c',
       '#12435D',
-      '#E2776B',
+      '#289588',
       '#CD3B1F',
       '#F6F6F6',
       '#EDEDED',

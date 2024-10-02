@@ -125,7 +125,7 @@
 @pageOverflowX       : hidden;
 
 @lineHeight          : 1.4285em;
-@textColor           : rgba(0, 0, 0, 0.87);
+@textColor           : #6989a5;
 
 /*-------------------
       Paragraph
@@ -221,12 +221,12 @@
 
 /*---  Colors  ---*/
 @red              : #CD3B1F;
-@orange           : #E2776B;
+@orange           : #289588;
 @yellow           : #FBBD08;
 @olive            : #B5CC18;
 @green            : #21BA45;
 @teal             : #00B5AD;
-@blue             : #5397B2;
+@blue             : #2e3e4c;
 @violet           : #6435C9;
 @purple           : #A333C8;
 @pink             : #E03997;
