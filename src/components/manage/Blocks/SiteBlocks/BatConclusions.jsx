@@ -20,7 +20,7 @@ const hasConclusions = (data, installations) => {
 const View = (props) => {
   const [activeAels, setActiveAels] = React.useState({});
   const { data = {}, installationsNth = {}, entity = '' } = props;
-  const installations = Object.keys(data).sort();
+  const installations = Object.keys(data).sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="bat-conclusions">
@@ -45,7 +45,9 @@ const View = (props) => {
       {hasConclusions(data, installations) ? (
         <div className="bat-conclusions-wrapper">
           {installations.map((installation) => {
-            const conclusions = Object.keys(data[installation] || {}).sort();
+            const conclusions = Object.keys(
+              data[installation] || {},
+            ).sort((a, b) => a.localeCompare(b));
 
             return conclusions.length ? (
               <div
