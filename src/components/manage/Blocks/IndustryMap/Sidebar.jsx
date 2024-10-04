@@ -248,7 +248,7 @@ class Sidebar extends React.Component {
             className="menu-button"
             title="Toggle sidebar"
             onClick={() => {
-              this.setState({ open: !this.state.open });
+              this.setState((prevState) => ({ open: !prevState.open }));
             }}
           >
             <Icon name={menuSVG} size="1em" fill="white" />
