@@ -23,9 +23,12 @@
     "@eeacms/volto-columns-block",
     "@eeacms/volto-matomo"
   ],
+  "resolutions": {
+    "@eeacms/volto-datablocks": "4.0.5"
+  },
   "dependencies": {
     "@eeacms/volto-columns-block": "*",
-    "@eeacms/volto-datablocks": "*",
+    "@eeacms/volto-datablocks": "~4.0.5",
     "@eeacms/volto-matomo": "*",
     "@eeacms/volto-openlayers-map": "*",
     "@eeacms/volto-tableau": "*",
