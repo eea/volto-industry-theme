@@ -13,7 +13,7 @@ import { setConnectedDataParameters } from '@eeacms/volto-datablocks/actions';
 export function cleanUpText(value) {
   let text = value.replaceAll('\n', '');
   text = text.replaceAll("'", "''");
-  text = text.replace(/^\s+|\s+$/gm, '');
+  text = text.replace(/(^\s+|\s+$)/gm, '');
 
   return text;
 }

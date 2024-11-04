@@ -87,7 +87,7 @@ const PrivacyProtection = ({
                         className="floating-icon mr-1"
                         data-tip={dataprotection.privacy_statement}
                       >
-                        <Icon name={infoSVG} size="20px" color="#E2776B" />
+                        <Icon name={infoSVG} size="20px" color="#289588" />
                       </span>
                     ) : (
                       ''

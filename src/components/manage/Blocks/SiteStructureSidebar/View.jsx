@@ -83,7 +83,9 @@ const View = (props) => {
       });
       setSiteStructure({
         ...newSiteStructure,
-        facilities: newSiteStructure.facilities.sort(),
+        facilities: newSiteStructure.facilities.sort((a, b) =>
+          a.localeCompare(b),
+        ),
       });
     }
     /* eslint-disable-next-line */

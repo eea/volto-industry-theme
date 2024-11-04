@@ -32,7 +32,7 @@ const View = (props) => {
       );
       const facilities = [
         ...new Set(provider_data?.facilityInspireId || []),
-      ].sort();
+      ].sort((a, b) => a.localeCompare(b));
       let newBatConclusions = {};
       const counter = {};
       const nth = {};
@@ -58,7 +58,7 @@ const View = (props) => {
       });
 
       Object.keys(newBatConclusions)
-        .sort()
+        .sort((a, b) => a.localeCompare(b))
         .forEach((id, index) => {
           const installation = newBatConclusions[id];
           const facility = installation.facility;

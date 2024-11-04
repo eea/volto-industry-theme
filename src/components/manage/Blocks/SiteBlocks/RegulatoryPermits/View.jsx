@@ -32,7 +32,7 @@ const View = (props) => {
       );
       const facilities = [
         ...new Set(provider_data?.facilityInspireId || []),
-      ].sort();
+      ].sort((a, b) => a.localeCompare(b));
       let newPermits = [];
       const counter = {};
       indexes.forEach((index, i) => {

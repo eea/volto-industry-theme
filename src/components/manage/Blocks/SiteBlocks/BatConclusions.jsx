@@ -20,7 +20,7 @@ const hasConclusions = (data, installations) => {
 const View = (props) => {
   const [activeAels, setActiveAels] = React.useState({});
   const { data = {}, installationsNth = {}, entity = '' } = props;
-  const installations = Object.keys(data).sort();
+  const installations = Object.keys(data).sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="bat-conclusions">
@@ -36,7 +36,7 @@ const View = (props) => {
           content="Number of individual conclusions that indicate which techniques or combinations of techniques are BAT for achieving a specific environmental objective"
           trigger={
             <div className="popup-svg">
-              <Icon name={infoSVG} size="20px" color="#E2776B" />
+              <Icon name={infoSVG} size="20px" color="#289588" />
             </div>
           }
         />
@@ -45,7 +45,9 @@ const View = (props) => {
       {hasConclusions(data, installations) ? (
         <div className="bat-conclusions-wrapper">
           {installations.map((installation) => {
-            const conclusions = Object.keys(data[installation] || {}).sort();
+            const conclusions = Object.keys(
+              data[installation] || {},
+            ).sort((a, b) => a.localeCompare(b));
 
             return conclusions.length ? (
               <div
@@ -96,7 +98,7 @@ const View = (props) => {
                                             : rightSVG
                                         }
                                         size="20px"
-                                        color="#E2776B"
+                                        color="#289588"
                                         onClick={() => {
                                           if (
                                             !activeAels[

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Logo, Navigation } from '@plone/volto/components';
-import { Parteners } from '@eeacms/volto-industry-theme/components';
+// import { Parteners } from '@eeacms/volto-industry-theme/components';
 
 /**
  * Header component class.
@@ -59,7 +59,7 @@ class Header extends Component {
               </div>
               <Navigation pathname={this.props.pathname} />
             </div>
-            <Parteners className="computer large screen widescreen only" />
+            {/* <Parteners className="computer large screen widescreen only" /> */}
           </div>
         </Container>
       </Segment>
