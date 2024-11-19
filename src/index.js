@@ -21,8 +21,8 @@ const applyConfig = (config) => {
     matomoSiteId: 48,
     tableauVersion: '2.3.0',
     available_colors: [
-      '#81C9DB',
-      '#2e3e4c',
+      '#6989A5',
+      '#2E3E4C',
       '#12435D',
       '#289588',
       '#CD3B1F',
